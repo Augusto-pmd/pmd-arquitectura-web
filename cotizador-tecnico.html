@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cotizador técnico — PMD Arquitectura</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --b1:#5BA3C9;--b2:#3B6EA5;--b3:#2B4E7A;
+  --ink:#1C1C1A;--ink2:#52524F;--ink3:#909090;
+  --bg:#F2F5F9;--bg2:#E6EDF6;--white:#fff;
+  --border:rgba(28,28,26,.10);--border2:rgba(28,28,26,.06);
+  --r:3px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;display:flex;flex-direction:column}
+
+nav{background:var(--white);border-bottom:1px solid var(--border);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;flex-shrink:0}
+.brand{display:flex;align-items:center;gap:8px}
+.sqs{display:flex;gap:3px}.sq{width:8px;height:8px;border-radius:1px}
+.s1{background:var(--b1)}.s2{background:var(--b2)}.s3{background:var(--b3)}
+.bname{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;letter-spacing:.04em}
+
+.page{flex:1;padding:2rem 1rem;max-width:800px;margin:0 auto;width:100%}
+
+/* STEPS */
+.steps-bar{display:flex;gap:0;margin-bottom:2rem;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;background:var(--white)}
+.step-tab{flex:1;padding:10px 8px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:12px;color:var(--ink3);border-right:1px solid var(--border);cursor:pointer;transition:all .15s}
+.step-tab:last-child{border:none}
+.step-tab.act{background:var(--ink);color:#fff}
+.step-tab.done{background:var(--bg2);color:var(--b2)}
+.step-num{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;background:rgba(255,255,255,.15);flex-shrink:0}
+.step-tab:not(.act) .step-num{background:var(--bg);color:var(--ink3)}
+.step-tab.done .step-num{background:var(--b2);color:#fff}
+
+/* PANEL */
+.panel{display:none}.panel.on{display:block;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+/* SECTION CARD */
+.sec{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1.4rem;margin-bottom:.8rem}
+.sec-title{font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin-bottom:1rem;padding-bottom:8px;border-bottom:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between}
+.sec-usd{font-size:12px;font-weight:500;color:var(--b2);letter-spacing:0}
+
+/* FORM GRID */
+.fg{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.8rem}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:11px;font-weight:500;color:var(--ink2);text-transform:uppercase;letter-spacing:.06em}
+.field input,.field select{height:38px;padding:0 10px;border:1px solid var(--border);border-radius:var(--r);background:var(--bg);font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink);outline:none;transition:all .15s;-webkit-appearance:none}
+.field input:focus,.field select:focus{border-color:var(--b2);background:var(--white)}
+.field input.err{border-color:#C0392B}
+.field .hint{font-size:10px;color:var(--ink3)}
+
+/* RADIO CARDS */
+.rg{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.rc{border:1.5px solid var(--border);border-radius:var(--r);padding:10px 12px;cursor:pointer;transition:all .15s;background:var(--bg);position:relative}
+.rc:hover,.rc.sel{border-color:var(--b2);background:var(--white)}
+.rc input{position:absolute;opacity:0;width:0;height:0}
+.rc-label{font-size:13px;font-weight:500;color:var(--ink);margin-bottom:2px}
+.rc-desc{font-size:11px;color:var(--ink3)}
+.rc-price{font-size:11px;color:var(--b2);margin-top:4px;font-weight:500}
+.rc-check{width:14px;height:14px;border-radius:50%;border:1.5px solid var(--border);position:absolute;top:10px;right:10px;transition:all .15s}
+.rc.sel .rc-check{background:var(--b2);border-color:var(--b2)}
+.rc.sel .rc-check::after{content:'';width:5px;height:5px;background:#fff;border-radius:50%;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}
+
+/* TOGGLE ROW */
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border2)}
+.toggle-row:last-child{border:none;padding-bottom:0}
+.tr-left{display:flex;flex-direction:column;gap:2px}
+.tr-label{font-size:13px;font-weight:500;color:var(--ink)}
+.tr-desc{font-size:11px;color:var(--ink3)}
+.tr-price{font-size:11px;color:var(--b2);font-weight:500}
+.toggle{width:34px;height:18px;border-radius:9px;background:var(--border);position:relative;cursor:pointer;transition:background .2s;flex-shrink:0}
+.toggle.on{background:var(--b2)}
+.toggle::after{content:'';position:absolute;width:13px;height:13px;background:#fff;border-radius:50%;top:2.5px;left:2.5px;transition:transform .2s}
+.toggle.on::after{transform:translateX(16px)}
+
+/* SLIDER */
+.slider-wrap{display:flex;flex-direction:column;gap:4px}
+.slider-row{display:flex;align-items:center;gap:10px}
+.slider-row input[type=range]{flex:1;height:4px;-webkit-appearance:none;appearance:none;background:var(--border);border-radius:2px;outline:none}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--b2);cursor:pointer;border:2px solid var(--white);box-shadow:0 0 0 1px var(--b2)}
+.slider-val{font-size:12px;font-weight:500;color:var(--ink);min-width:40px;text-align:right}
+
+/* RESULT BOX */
+.result-hero{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:.8rem}
+.r-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--b2);margin-bottom:.3rem}
+.r-total{font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:500;color:var(--ink);line-height:1}
+.r-ars{font-size:12px;color:var(--ink3);margin-top:.2rem;margin-bottom:1rem}
+.r-note{font-size:11px;color:var(--ink2);background:var(--bg);padding:8px 12px;border-radius:var(--r);border-left:3px solid var(--b1);line-height:1.6;margin-bottom:1rem}
+
+/* DESGLOSE LOCKED */
+.desglose-locked{border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:.8rem}
+.dl-header{background:var(--ink);padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+.dl-title{font-size:13px;font-weight:500;color:#fff}
+.dl-badge{font-size:10px;background:rgba(255,255,255,.15);color:rgba(255,255,255,.7);padding:2px 8px;border-radius:10px}
+.dl-locked{padding:1.2rem;display:flex;align-items:center;gap:12px;background:var(--bg)}
+.dl-lock-icon{width:32px;height:32px;background:var(--bg2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.dl-locked-text{font-size:12px;color:var(--ink2);line-height:1.5}
+.dl-unlocked{padding:0}
+.rubro-row{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-bottom:1px solid var(--border2);font-size:13px}
+.rubro-row:last-child{border:none}
+.rr-label{color:var(--ink2)}
+.rr-val{font-weight:500;color:var(--ink)}
+.rr-bar{width:60px;height:3px;background:var(--border);border-radius:2px;margin-top:3px}
+.rr-bar-fill{height:3px;border-radius:2px;background:var(--b2)}
+
+/* LEAD FORM */
+.lead-form{background:var(--ink);border-radius:var(--r);padding:1.4rem;margin-bottom:.8rem}
+.lf-title{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:#fff;margin-bottom:.3rem}
+.lf-sub{font-size:12px;color:rgba(255,255,255,.45);margin-bottom:1rem}
+.lf-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:.8rem}
+.lf-field{display:flex;flex-direction:column;gap:4px}
+.lf-field label{font-size:11px;font-weight:500;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.06em}
+.lf-field input,.lf-field select{height:40px;padding:0 12px;border:1px solid rgba(255,255,255,.15);border-radius:var(--r);background:rgba(255,255,255,.08);font-family:'DM Sans',sans-serif;font-size:13px;color:#fff;outline:none;transition:all .15s;-webkit-appearance:none}
+.lf-field input:focus,.lf-field select:focus{border-color:var(--b1);background:rgba(255,255,255,.12)}
+.lf-field input::placeholder{color:rgba(255,255,255,.3)}
+.lf-field select option{color:var(--ink);background:var(--white)}
+.lf-field input.err{border-color:#E24B4A}
+
+/* BUTTONS */
+.btn{width:100%;height:46px;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;border:none;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px}
+.btn-main{background:var(--b2);color:#fff;margin-bottom:.5rem}
+.btn-main:hover{background:var(--b3)}
+.btn-wa{background:#25D366;color:#fff}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--ink2);margin-top:.5rem;height:36px;font-size:12px}
+.btn-ghost:hover{background:var(--bg2)}
+.btn-unlock{width:100%;height:40px;background:var(--b2);color:#fff;border:none;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;margin-top:.6rem}
+
+/* CHIPS */
+.chips-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1rem}
+.chip-tag{background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:3px 10px;font-size:11px;color:var(--ink2)}
+
+footer{padding:1rem 2rem;text-align:center;font-size:11px;color:var(--ink3);border-top:1px solid var(--border);background:var(--white)}
+footer a{color:var(--b2);text-decoration:none}
+
+@media(max-width:600px){
+  .step-tab span.step-name{display:none}
+  .fg,.rg{grid-template-columns:1fr}
+  .lf-row,.rg{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="brand">
+    <div class="sqs"><div class="sq s1"></div><div class="sq s2"></div><div class="sq s3"></div></div>
+    <span class="bname">PMD</span>
+    <span style="color:var(--ink3);margin:0 6px;font-size:12px">·</span>
+    <span style="font-size:11px;color:var(--ink3);letter-spacing:.06em">Cotizador técnico</span>
+  </div>
+  <a href="#" style="font-size:11px;color:var(--b2)">← Volver a la web</a>
+</nav>
+
+<div class="page">
+
+  <div class="steps-bar">
+    <div class="step-tab act" id="st1" onclick="goStep(1)">
+      <div class="step-num">1</div><span class="step-name">Proyecto</span>
+    </div>
+    <div class="step-tab" id="st2" onclick="goStep(2)">
+      <div class="step-num">2</div><span class="step-name">Estructura</span>
+    </div>
+    <div class="step-tab" id="st3" onclick="goStep(3)">
+      <div class="step-num">3</div><span class="step-name">Terminaciones</span>
+    </div>
+    <div class="step-tab" id="st4" onclick="goStep(4)">
+      <div class="step-num">4</div><span class="step-name">Instalaciones</span>
+    </div>
+    <div class="step-tab" id="st5" onclick="goStep(5)">
+      <div class="step-num">5</div><span class="step-name">Resultado</span>
+    </div>
+  </div>
+
+  <!-- ══ PANEL 1: PROYECTO ══ -->
+  <div class="panel on" id="p1">
+    <div class="sec">
+      <div class="sec-title">Superficie y tipología</div>
+      <div class="fg">
+        <div class="field">
+          <label>M² cubiertos *</label>
+          <input type="number" id="m2" placeholder="ej: 200" min="40" max="1000">
+          <span class="hint">Superficie total bajo techo</span>
+        </div>
+        <div class="field">
+          <label>M² semicubiertos</label>
+          <input type="number" id="m2semi" placeholder="ej: 30" min="0" value="0">
+          <span class="hint">Galería, cochera techada</span>
+        </div>
+        <div class="field">
+          <label>Plantas</label>
+          <select id="plantas">
+            <option value="1">1 planta</option>
+            <option value="2">2 plantas (+8%)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Tipo de suelo</label>
+          <select id="suelo">
+            <option value="normal">Normal / tosca</option>
+            <option value="relleno">Relleno (+USD 15/m²)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-title">Sistema constructivo</div>
+      <div class="rg">
+        <label class="rc sel" onclick="selRC(this,'sistema','sf')">
+          <input type="radio" name="sistema" value="sf" checked>
+          <div class="rc-check"></div>
+          <div class="rc-label">Steel framing</div>
+          <div class="rc-desc">Perfiles galvanizados · recomendado barrios privados</div>
+          <div class="rc-price">Sistema PMD</div>
+        </label>
+        <label class="rc" onclick="selRC(this,'sistema','trad')">
+          <input type="radio" name="sistema" value="trad">
+          <div class="rc-check"></div>
+          <div class="rc-label">Tradicional</div>
+          <div class="rc-desc">Mampostería + hormigón armado</div>
+          <div class="rc-price">-5% vs SF</div>
+        </label>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-title">Adicionales</div>
+      <div class="toggle-row" id="t-pileta" onclick="togExtra('pileta')">
+        <div class="tr-left">
+          <span class="tr-label">Pileta de natación</span>
+          <span class="tr-desc">Construcción propia · MO incluida</span>
+          <span class="tr-price">USD 13.265 fijo</span>
+        </div>
+        <div class="toggle" id="tog-pileta"></div>
+      </div>
+      <div class="toggle-row" id="t-garage" onclick="togExtra('garage')">
+        <div class="tr-left">
+          <span class="tr-label">Garage cubierto</span>
+          <span class="tr-desc">Estructura SF · 1 auto</span>
+          <span class="tr-price">USD 8.000 fijo</span>
+        </div>
+        <div class="toggle" id="tog-garage"></div>
+      </div>
+      <div class="toggle-row" id="t-terraza" onclick="togExtra('terraza')">
+        <div class="tr-left">
+          <span class="tr-label">Terraza / deck exterior</span>
+          <span class="tr-desc">Deck de madera o porcelanato</span>
+          <span class="tr-price">USD 4.000 fijo</span>
+        </div>
+        <div class="toggle" id="tog-terraza"></div>
+      </div>
+      <div class="toggle-row" id="t-plantas2" onclick="togExtra('plantas2')" style="display:none"><!-- handled via select --></div>
+    </div>
+
+    <div style="display:flex;gap:.6rem;justify-content:flex-end;margin-top:1rem">
+      <button class="btn btn-main" style="width:auto;padding:0 28px" onclick="goStep(2)">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- ══ PANEL 2: ESTRUCTURA ══ -->
+  <div class="panel" id="p2">
+    <div class="sec">
+      <div class="sec-title">Cubierta / techo <span class="sec-usd" id="su-cubierta">USD 0</span></div>
+      <div class="rg">
+        <label class="rc sel" onclick="selRC(this,'cubierta','chapa_galv')">
+          <input type="radio" name="cubierta" value="chapa_galv" checked>
+          <div class="rc-check"></div>
+          <div class="rc-label">Chapa galvanizada</div>
+          <div class="rc-desc">C25 Ternium · estándar SF</div>
+          <div class="rc-price">USD 9.5/m² cubierta</div>
+        </label>
+        <label class="rc" onclick="selRC(this,'cubierta','chapa_prepint')">
+          <input type="radio" name="cubierta" value="chapa_prepint">
+          <div class="rc-check"></div>
+          <div class="rc-label">Chapa prepintada</div>
+          <div class="rc-desc">Color a elección · mayor durabilidad</div>
+          <div class="rc-price">USD 12/m² cubierta</div>
+        </label>
+        <label class="rc" onclick="selRC(this,'cubierta','membrana')">
+          <input type="radio" name="cubierta" value="membrana">
+          <div class="rc-check"></div>
+          <div class="rc-label">Cubierta plana + membrana</div>
+          <div class="rc-desc">Losa + membrana líquida</div>
+          <div class="rc-price">USD 18/m² cubierta</div>
+        </label>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-title">Revestimiento exterior <span class="sec-usd" id="su-revext">USD 0</span></div>
+      <div class="rg">
+        <label class="rc sel" onclick="selRC(this,'revext','eifs')">
+          <input type="radio" name="revext" value="eifs" checked>
+          <div class="rc-check"></div>
+          <div class="rc-label">EIFS / revoque exterior</div>
+          <div class="rc-desc">Sistema de aislación térmica exterior · estándar PMD</div>
+          <div class="rc-price">incluido en mat SF</div>
+        </label>
+        <label class="rc" onclick="selRC(this,'revext','porcelanato')">
+          <input type="radio" name="revext" value="porcelanato">
+          <div class="rc-check"></div>
+          <div class="rc-label">Porcelanato exterior</div>
+          <div class="rc-desc">60x60 o 90x90, colocado</div>
+          <div class="rc-price">+USD 45/m² fachada</div>
+        </label>
+        <label class="rc" onclick="selRC(this,'revext','madera')">
+          <input type="radio" name="revext" value="madera">
+          <div class="rc-check"></div>
+          <div class="rc-label">Listones de madera</div>
+          <div class="rc-desc">Deck o IPE · como Punta del Este</div>
+          <div class="rc-price">+USD 60/m² fachada</div>
+        </label>
+        <label class="rc" onclick="selRC(this,'revext','chapa_perforada')">
+          <input type="radio" name="revext" value="chapa_perforada">
+          <div class="rc-check"></div>
+          <div class="rc-label">Chapa perforada / corten</div>
+          <div class="rc-desc">Elemento arquitectónico de diseño</div>
+          <div class="rc-price">+USD 80/m² fachada</div>
+        </label>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:.6rem;justify-content:space-between;margin-top:1rem">
+      <button class="btn btn-ghost" style="width:auto;padding:0 20px" onclick="goStep(1)">← Atrás</button>
+      <button class="btn btn-main" style="width:auto;padding:0 28px" onclick="goStep(3)">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- ══ PANEL 3: TERMINACIONES ══ -->
+  <div class="panel" id="p3">
+    <div class="sec">
+      <div class="sec-title">Pisos y revestimientos interiores <span class="sec-usd" id="su-pisos">USD 0</span></div>
+      <div class="rg">
+        <label class="rc" onclick="selRC(this,'pisos','cemento')">
+          <input type="radio" name="pisos" value="cemento">
+          <div class="rc-check"></div>
+          <div class="rc-label">Cemento alisado</div>
+          <div class="rc-desc">Microcemento · industrial · bajo mantenimiento</div>
+          <div class="rc-price">USD 18/m²</div>
+        </label>
+        <label class="rc sel" onclick="selRC(this,'pisos','ceramico')">
+          <input type="radio" name="pisos" value="ceramico" checked>
+          <div class="rc-check"></div>
+          <div class="rc-label">Cerámico 60x60</div>
+          <div class="rc-desc">Nacional primera marca · estándar</div>
+          <div class="rc-price">USD 28/m²</div>
+        </label>
+        <label class="rc" onclick="selRC(this,'pisos','porcelanato')">
+          <input type="radio" name="pisos" value="porcelanato">
+          <div class="rc-check"></div>
+          <div class="rc-label">Porcelanato 80x80</div>
+          <div class="rc-desc">Importado o premium nacional</div>
+          <div class="rc-price">USD 45/m²</div>
+        </label>
+        <label class="rc" onclick="selRC(this,'pisos','madera')">
+          <input type="radio" name="pisos" value="madera">
+          <div class="rc-check"></div>
+          <div class="rc-label">Piso de madera</div>
+          <div class="rc-desc">Flotante o parquet · dormitorios</div>
+          <div class="rc-price">USD 55/m²</div>
+        </label>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-title">Mesadas y muebles de cocina <span class="sec-usd" id="su-cocina">USD 0</span></div>
+      <div class="rg">
+        <label class="rc" onclick="selRC(this,'cocina','basica')">
+          <input type="radio" name="cocina" value="basica">
+          <div class="rc-check"></div>
+          <div class="rc-label">Cocina básica</div>
+          <div class="rc-desc">Muebles melamina · mesada granito nacional</div>
+          <div class="rc-price">USD 4.000 fijo</div>
+        </label>
+        <label class="rc sel" onclick="selRC(this,'cocina','media')">
+          <input type="radio" name="cocina" value="media" checked>
+          <div class="rc-check"></div>
+          <div class="rc-label">Cocina con isla</div>
+          <div class="rc-desc">Melamina + silestone · Naudir estándar</div>
+          <div class="rc-price">USD 8.000 fijo</div>
+        </label>
+        <label class="rc" onclick="selRC(this,'cocina','diseno')">
+          <input type="radio" name="cocina" value="diseno">
+          <div class="rc-check"></div>
+          <div class="rc-label">Cocina de diseño</div>
+          <div class="rc-desc">Lacada o enchapada · mesada Silestone premium</div>
+          <div class="rc-price">USD 15.000 fijo</div>
+        </label>
+        <label class="rc" onclick="selRC(this,'cocina','importada')">
+          <input type="radio" name="cocina" value="importada">
+          <div class="rc-check"></div>
+          <div class="rc-label">Cocina importada</div>
+          <div class="rc-desc">Linha, Leicht, SieMatic o similar</div>
+          <div class="rc-price">USD 35.000+</div>
+        </label>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-title">Aberturas <span class="sec-usd" id="su-aber">USD 0</span></div>
+      <div class="rg">
+        <label class="rc" onclick="selRC(this,'aber','simple')">
+          <input type="radio" name="aber" value="simple">
+          <div class="rc-check"></div>
+          <div class="rc-label">Aluminio simple</div>
+          <div class="rc-desc">Sin DVH · económico</div>
+          <div class="rc-price">USD 100/m² abertura</div>
+        </label>
+        <label class="rc sel" onclick="selRC(this,'aber','dvh')">
+          <input type="radio" name="aber" value="dvh" checked>
+          <div class="rc-check"></div>
+          <div class="rc-label">Alum. negro DVH</div>
+          <div class="rc-desc">Modena · doble vidrio + mosquitero · Naudir ✓</div>
+          <div class="rc-price">USD 195/m² abertura</div>
+        </label>
+        <label class="rc" onclick="selRC(this,'aber','rpt')">
+          <input type="radio" name="aber" value="rpt">
+          <div class="rc-check"></div>
+          <div class="rc-label">RPT importado</div>
+          <div class="rc-desc">Rotura puente térmico · alta eficiencia</div>
+          <div class="rc-price">USD 350/m² abertura</div>
+        </label>
+        <label class="rc" onclick="selRC(this,'aber','schueco')">
+          <input type="radio" name="aber" value="schueco">
+          <div class="rc-check"></div>
+          <div class="rc-label">Schüco / premium</div>
+          <div class="rc-desc">Sistema europeo · máxima performance</div>
+          <div class="rc-price">USD 600/m² abertura</div>
+        </label>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:.6rem;justify-content:space-between;margin-top:1rem">
+      <button class="btn btn-ghost" style="width:auto;padding:0 20px" onclick="goStep(2)">← Atrás</button>
+      <button class="btn btn-main" style="width:auto;padding:0 28px" onclick="goStep(4)">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- ══ PANEL 4: INSTALACIONES ══ -->
+  <div class="panel" id="p4">
+    <div class="sec">
+      <div class="sec-title">Instalación sanitaria <span class="sec-usd" id="su-sanitaria">USD 0</span></div>
+      <div class="fg" style="margin-bottom:.8rem">
+        <div class="field">
+          <label>Cantidad de baños</label>
+          <select id="banos" onchange="updateParciales()">
+            <option value="1">1 baño</option>
+            <option value="2" selected>2 baños</option>
+            <option value="3">3 baños</option>
+            <option value="4">4 baños</option>
+            <option value="5">5 o más</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Nivel sanitario</label>
+          <select id="sanitaria" onchange="updateParciales()">
+            <option value="basico">Básico (artefactos nacionales)</option>
+            <option value="medio" selected>Medio (Ferrum / Roca)</option>
+            <option value="premium">Premium (Grohe / importado)</option>
+          </select>
+        </div>
+      </div>
+      <div class="rg">
+        <label class="rc" onclick="selRC(this,'bano_det','ceramico')">
+          <input type="radio" name="bano_det" value="ceramico">
+          <div class="rc-check"></div>
+          <div class="rc-label">Cerámico estándar</div>
+          <div class="rc-desc">Revestimiento nacional 30x60</div>
+          <div class="rc-price">incluido nivel medio</div>
+        </label>
+        <label class="rc sel" onclick="selRC(this,'bano_det','porcelanato')">
+          <input type="radio" name="bano_det" value="porcelanato" checked>
+          <div class="rc-check"></div>
+          <div class="rc-label">Porcelanato mármol</div>
+          <div class="rc-desc">Como los baños del portfolio PMD</div>
+          <div class="rc-price">+USD 800/baño</div>
+        </label>
+        <label class="rc" onclick="selRC(this,'bano_det','marmol')">
+          <input type="radio" name="bano_det" value="marmol">
+          <div class="rc-check"></div>
+          <div class="rc-label">Mármol o travertino</div>
+          <div class="rc-desc">Material importado · nivel premium</div>
+          <div class="rc-price">+USD 2.500/baño</div>
+        </label>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-title">Instalación eléctrica <span class="sec-usd" id="su-electrica">USD 0</span></div>
+      <div class="fg" style="margin-bottom:.8rem">
+        <div class="field">
+          <label>Bocas eléctricas</label>
+          <div class="slider-wrap">
+            <div class="slider-row">
+              <input type="range" id="bocas" min="20" max="120" value="50" step="5" oninput="updateBocas(this.value);updateParciales()">
+              <span class="slider-val" id="bocas-val">50 bocas</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--ink3)"><span>20</span><span>120</span></div>
+          </div>
+          <span class="hint">~0.5 bocas/m² para nivel estándar</span>
+        </div>
+        <div class="field">
+          <label>Nivel tablero</label>
+          <select id="tablero" onchange="updateParciales()">
+            <option value="basico">Básico (hasta 20 circuitos)</option>
+            <option value="medio" selected>Medio (hasta 40 circuitos)</option>
+            <option value="premium">Premium + UPS + puesta a tierra</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-title">Calefacción y climatización <span class="sec-usd" id="su-calef">USD 0</span></div>
+      <div class="rg">
+        <label class="rc" onclick="selRC(this,'calef','ninguna')">
+          <input type="radio" name="calef" value="ninguna">
+          <div class="rc-check"></div>
+          <div class="rc-label">Sin calefacción</div>
+          <div class="rc-desc">Cotizar aparte con instalador</div>
+          <div class="rc-price">USD 0</div>
+        </label>
+        <label class="rc sel" onclick="selRC(this,'calef','caldera_rad')">
+          <input type="radio" name="calef" value="caldera_rad" checked>
+          <div class="rc-check"></div>
+          <div class="rc-label">Caldera + radiadores</div>
+          <div class="rc-desc">Gas natural · sistema húmedo</div>
+          <div class="rc-price">USD 12/m²</div>
+        </label>
+        <label class="rc" onclick="selRC(this,'calef','losa_rad')">
+          <input type="radio" name="calef" value="losa_rad">
+          <div class="rc-check"></div>
+          <div class="rc-label">Losa radiante</div>
+          <div class="rc-desc">Caldera + circuitos en piso · máximo confort</div>
+          <div class="rc-price">USD 22/m²</div>
+        </label>
+        <label class="rc" onclick="selRC(this,'calef','split')">
+          <input type="radio" name="calef" value="split">
+          <div class="rc-check"></div>
+          <div class="rc-label">Split / multi-split</div>
+          <div class="rc-desc">Frío-calor · sin obra de gas</div>
+          <div class="rc-price">USD 8/m²</div>
+        </label>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-title">Honorarios PMD</div>
+      <div class="rg">
+        <label class="rc sel" onclick="selRC(this,'honorarios','0.12')">
+          <input type="radio" name="honorarios" value="0.12" checked>
+          <div class="rc-check"></div>
+          <div class="rc-label">Dirección de obra</div>
+          <div class="rc-desc">PMD dirige y administra la ejecución</div>
+          <div class="rc-price">12% sobre costo</div>
+        </label>
+        <label class="rc" onclick="selRC(this,'honorarios','0.18')">
+          <input type="radio" name="honorarios" value="0.18">
+          <div class="rc-check"></div>
+          <div class="rc-label">Proyecto + dirección</div>
+          <div class="rc-desc">Diseño arquitectónico + ejecución completa</div>
+          <div class="rc-price">18% sobre costo</div>
+        </label>
+        <label class="rc" onclick="selRC(this,'honorarios','0')">
+          <input type="radio" name="honorarios" value="0">
+          <div class="rc-check"></div>
+          <div class="rc-label">Sin honorarios</div>
+          <div class="rc-desc">Solo costo de construcción</div>
+          <div class="rc-price">USD 0</div>
+        </label>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:.6rem;justify-content:space-between;margin-top:1rem">
+      <button class="btn btn-ghost" style="width:auto;padding:0 20px" onclick="goStep(3)">← Atrás</button>
+      <button class="btn btn-main" style="width:auto;padding:0 28px" onclick="calcularYMostrar()">Ver mi presupuesto →</button>
+    </div>
+  </div>
+
+  <!-- ══ PANEL 5: RESULTADO ══ -->
+  <div class="panel" id="p5">
+
+    <div class="chips-row" id="r-chips"></div>
+
+    <div class="result-hero">
+      <div class="r-label">Inversión total estimada — sin terreno</div>
+      <div class="r-total" id="r-total">–</div>
+      <div class="r-ars" id="r-ars">–</div>
+      <div class="r-note" id="r-note">Estimación ±10% · Costos verificados obras PMD · mar-2026 · TC $1.425</div>
+    </div>
+
+    <!-- DESGLOSE BLOQUEADO -->
+    <div class="desglose-locked" id="desglose-wrap">
+      <div class="dl-header">
+        <span class="dl-title">Desglose por rubro</span>
+        <span class="dl-badge" id="dl-badge">🔒 Requiere datos</span>
+      </div>
+      <div class="dl-locked" id="dl-locked">
+        <div class="dl-lock-icon">🔒</div>
+        <div>
+          <div class="dl-locked-text">Dejá tu WhatsApp para ver el desglose completo por rubro y recibir el presupuesto detallado.</div>
+          <button class="btn-unlock" onclick="showLeadForm()">Desbloquear desglose →</button>
+        </div>
+      </div>
+      <div class="dl-unlocked" id="dl-unlocked" style="display:none"></div>
+    </div>
+
+    <!-- FORMULARIO LEAD (oculto hasta que toca desbloquear) -->
+    <div class="lead-form" id="lead-form" style="display:none">
+      <div class="lf-title">Un paso más</div>
+      <div class="lf-sub">Dejá tu WhatsApp y te enviamos el presupuesto detallado por rubro.</div>
+      <div class="lf-row">
+        <div class="lf-field"><label>Nombre</label><input type="text" id="l-nombre" placeholder="Tu nombre"></div>
+        <div class="lf-field"><label>WhatsApp</label><input type="tel" id="l-tel" placeholder="+54 9 11..."></div>
+      </div>
+      <div class="lf-row">
+        <div class="lf-field">
+          <label>Zona del proyecto</label>
+          <select id="l-zona">
+            <option value="">Seleccioná</option>
+            <option>Nordelta / Tigre</option>
+            <option>San Isidro / Acassuso</option>
+            <option>Escobar / Maschwitz</option>
+            <option>Pilar / Zona Norte</option>
+            <option>Otra zona GBA</option>
+          </select>
+        </div>
+        <div class="lf-field">
+          <label>¿En qué etapa estás?</label>
+          <select id="l-etapa">
+            <option value="">Seleccioná</option>
+            <option>Tengo terreno y quiero arrancar</option>
+            <option>Estoy buscando terreno</option>
+            <option>Ya tengo proyecto, busco constructor</option>
+            <option>Solo quiero una referencia</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-main" onclick="desbloquearDesglose()">Ver desglose completo →</button>
+    </div>
+
+    <!-- POST DESGLOSE: WA -->
+    <div id="wa-section" style="display:none">
+      <a id="wa-link" href="#" target="_blank">
+        <button class="btn btn-wa">Hablar con PMD por WhatsApp</button>
+      </a>
+    </div>
+
+    <button class="btn btn-ghost" style="margin-top:.6rem" onclick="goStep(1)">Calcular otra vez</button>
+  </div>
+
+</div>
+
+<footer>
+  Costos verificados en obras reales · PMD Arquitectura · Mar 2026 · TC $1.425 ·
+  <a href="https://pmdarquitectura.com.ar">pmdarquitectura.com.ar</a>
+</footer>
+
+<script>
+const TC = 1425;
+
+// ── COSTOS BASE (USD/m²) ──────────────────────────────────────────
+const BASE = {
+  sf:   { mat:393, mo:209, gg:10 },  // media-alta base verificado Naudir
+  trad: { mat:360, mo:195, gg:10 },
+};
+
+// Costos de cubierta (USD/m² de superficie de cubierta ~= 85% m² cubiertos)
+const P_CUBIERTA = { chapa_galv:9.5, chapa_prepint:12, membrana:18 };
+
+// Revestimiento exterior (USD/m² de fachada ~= 40% del perímetro * altura)
+// Estimamos fachada = m² * 0.35 como proporción típica
+const P_REVEXT = { eifs:0, porcelanato:45, madera:60, chapa_perforada:80 };
+const RATIO_FACHADA = 0.35;
+
+// Pisos (USD/m² interior)
+const P_PISOS = { cemento:18, ceramico:28, porcelanato:45, madera:55 };
+
+// Cocina (fijo)
+const P_COCINA = { basica:4000, media:8000, diseno:15000, importada:35000 };
+
+// Aberturas (USD/m² de abertura, estimamos ratio sobre m² cubiertos)
+const RATIO_ABER = 0.18; // típico media-alta
+const P_ABER = { simple:100, dvh:195, rpt:350, schueco:600 };
+
+// Sanitaria por baño
+const P_SANIT = { basico:2800, medio:4200, premium:7500 };
+const P_BANO_DET = { ceramico:0, porcelanato:800, marmol:2500 };
+
+// Eléctrica
+const P_BOCA = 35; // USD/boca (MO + materiales)
+const P_TABLERO = { basico:800, medio:1500, premium:3500 };
+
+// Calefacción
+const P_CALEF = { ninguna:0, caldera_rad:12, losa_rad:22, split:8 };
+
+// Permisos y gastos generales (siempre incluidos)
+const P_PERMISOS = 10; // USD/m²
+
+// Adicionales fijos
+const P_ADI = { pileta:13265, garage:8000, terraza:4000 };
+
+// Honorarios
+let resultData = {};
+
+function getVal(name) {
+  const el = document.querySelector(`[name="${name}"]:checked`);
+  return el ? el.value : null;
+}
+
+function selRC(el, name, val) {
+  document.querySelectorAll(`[name="${name}"]`).forEach(r => r.closest('.rc').classList.remove('sel'));
+  el.classList.add('sel');
+  el.querySelector('input').checked = true;
+  updateParciales();
+}
+
+function togExtra(key) {
+  const tog = document.getElementById('tog-' + key);
+  tog.classList.toggle('on');
+  updateParciales();
+}
+
+function updateBocas(v) {
+  document.getElementById('bocas-val').textContent = v + ' bocas';
+}
+
+function fmt(n) { return Math.round(n).toLocaleString('es-AR'); }
+
+function calcular() {
+  const m2      = parseInt(document.getElementById('m2').value) || 150;
+  const m2semi  = parseInt(document.getElementById('m2semi').value) || 0;
+  const plantas = document.getElementById('plantas').value;
+  const suelo   = document.getElementById('suelo').value;
+  const sis     = getVal('sistema') || 'sf';
+
+  const c = BASE[sis];
+  let base_m2 = c.mat + c.mo + c.gg;
+  if (plantas === '2') base_m2 *= 1.08;
+  if (suelo === 'relleno') base_m2 += 15;
+
+  const costo_estructura = m2 * base_m2 + m2semi * base_m2 * 0.4;
+
+  // Cubierta
+  const cubierta_tipo = getVal('cubierta') || 'chapa_galv';
+  const m2_cubierta   = m2 * 0.88;
+  const costo_cubierta = m2_cubierta * P_CUBIERTA[cubierta_tipo];
+
+  // Revest exterior
+  const revext_tipo  = getVal('revext') || 'eifs';
+  const m2_fachada   = m2 * RATIO_FACHADA;
+  const costo_revext = m2_fachada * P_REVEXT[revext_tipo];
+
+  // Pisos
+  const pisos_tipo  = getVal('pisos') || 'ceramico';
+  const costo_pisos = m2 * P_PISOS[pisos_tipo];
+
+  // Cocina
+  const cocina_tipo  = getVal('cocina') || 'media';
+  const costo_cocina = P_COCINA[cocina_tipo];
+
+  // Aberturas
+  const aber_tipo   = getVal('aber') || 'dvh';
+  const m2_aber     = m2 * RATIO_ABER;
+  const costo_aber  = m2_aber * P_ABER[aber_tipo];
+
+  // Sanitaria
+  const banos        = parseInt(document.getElementById('banos').value) || 2;
+  const sanit_nivel  = document.getElementById('sanitaria').value || 'medio';
+  const bano_det     = getVal('bano_det') || 'porcelanato';
+  const costo_sanit  = banos * (P_SANIT[sanit_nivel] + P_BANO_DET[bano_det]);
+
+  // Eléctrica
+  const bocas       = parseInt(document.getElementById('bocas').value) || 50;
+  const tablero_niv = document.getElementById('tablero').value || 'medio';
+  const costo_elec  = bocas * P_BOCA + P_TABLERO[tablero_niv];
+
+  // Calefacción
+  const calef_tipo  = getVal('calef') || 'caldera_rad';
+  const costo_calef = m2 * P_CALEF[calef_tipo];
+
+  // Permisos y GG
+  const costo_gg = m2 * P_PERMISOS;
+
+  // Adicionales
+  let costo_adi = 0, adi_labels = [];
+  for (const k of ['pileta', 'garage', 'terraza']) {
+    if (document.getElementById('tog-' + k).classList.contains('on')) {
+      costo_adi += P_ADI[k];
+      adi_labels.push({ label: k.charAt(0).toUpperCase() + k.slice(1), usd: P_ADI[k] });
+    }
+  }
+
+  const subtotal = costo_estructura + costo_cubierta + costo_revext + costo_pisos +
+                   costo_cocina + costo_aber + costo_sanit + costo_elec +
+                   costo_calef + costo_gg + costo_adi;
+
+  const hon = parseFloat(getVal('honorarios') || '0.12');
+  const costo_hon = subtotal * hon;
+  const total = subtotal + costo_hon;
+
+  resultData = {
+    total, m2, sis, plantas, suelo,
+    rubros: [
+      { label: 'Estructura + MO (' + sis.toUpperCase() + ')', usd: Math.round(costo_estructura), pct: costo_estructura/total },
+      { label: 'Cubierta (' + cubierta_tipo.replace('_',' ') + ')', usd: Math.round(costo_cubierta), pct: costo_cubierta/total },
+      { label: 'Revest. exterior', usd: Math.round(costo_revext), pct: costo_revext/total },
+      { label: 'Pisos interiores (' + pisos_tipo + ')', usd: Math.round(costo_pisos), pct: costo_pisos/total },
+      { label: 'Cocina y mesadas', usd: Math.round(costo_cocina), pct: costo_cocina/total },
+      { label: 'Aberturas (' + aber_tipo.toUpperCase() + ' · ' + Math.round(m2_aber) + 'm²)', usd: Math.round(costo_aber), pct: costo_aber/total },
+      { label: 'Sanitaria (' + banos + ' baños)', usd: Math.round(costo_sanit), pct: costo_sanit/total },
+      { label: 'Eléctrica (' + bocas + ' bocas)', usd: Math.round(costo_elec), pct: costo_elec/total },
+      calef_tipo !== 'ninguna' ? { label: 'Calefacción (' + calef_tipo.replace('_',' ') + ')', usd: Math.round(costo_calef), pct: costo_calef/total } : null,
+      { label: 'Permisos y GG', usd: Math.round(costo_gg), pct: costo_gg/total },
+      ...adi_labels.map(a => ({ label: a.label, usd: a.usd, pct: a.usd/total })),
+      hon > 0 ? { label: 'Honorarios PMD (' + (hon*100) + '%)', usd: Math.round(costo_hon), pct: costo_hon/total } : null,
+    ].filter(Boolean),
+    waMsg: `Hola PMD! Calculé mi proyecto con el cotizador técnico:\n📐 ${m2}m² · ${sis.toUpperCase()} · ${plantas === '2' ? '2 plantas' : '1 planta'}\n🏗 Aberturas: ${aber_tipo.toUpperCase()} · Pisos: ${pisos_tipo}\n🔥 Calef: ${calef_tipo.replace('_',' ')} · ${banos} baños\n💰 Total estimado: USD ${fmt(Math.round(total*0.9))}–${fmt(Math.round(total*1.1))}\n\nQuiero coordinar una reunión.`
+  };
+
+  return resultData;
+}
+
+function updateParciales() {
+  // Actualizar subtotales parciales en tiempo real
+  try {
+    const m2    = parseInt(document.getElementById('m2').value) || 0;
+    if (!m2) return;
+
+    // Cubierta
+    const ct = getVal('cubierta') || 'chapa_galv';
+    document.getElementById('su-cubierta').textContent = 'USD ' + fmt(m2 * 0.88 * P_CUBIERTA[ct]);
+
+    // Revext
+    const rt = getVal('revext') || 'eifs';
+    document.getElementById('su-revext').textContent = 'USD ' + fmt(m2 * RATIO_FACHADA * P_REVEXT[rt]);
+
+    // Pisos
+    const pt = getVal('pisos') || 'ceramico';
+    document.getElementById('su-pisos').textContent = 'USD ' + fmt(m2 * P_PISOS[pt]);
+
+    // Cocina
+    const cok = getVal('cocina') || 'media';
+    document.getElementById('su-cocina').textContent = 'USD ' + fmt(P_COCINA[cok]);
+
+    // Aberturas
+    const at = getVal('aber') || 'dvh';
+    document.getElementById('su-aber').textContent = 'USD ' + fmt(m2 * RATIO_ABER * P_ABER[at]);
+
+    // Sanitaria
+    const banos = parseInt(document.getElementById('banos')?.value) || 2;
+    const sn = document.getElementById('sanitaria')?.value || 'medio';
+    const bd = getVal('bano_det') || 'porcelanato';
+    document.getElementById('su-sanitaria').textContent = 'USD ' + fmt(banos * (P_SANIT[sn] + P_BANO_DET[bd]));
+
+    // Eléctrica
+    const bocas = parseInt(document.getElementById('bocas')?.value) || 50;
+    const tn = document.getElementById('tablero')?.value || 'medio';
+    document.getElementById('su-electrica').textContent = 'USD ' + fmt(bocas * P_BOCA + P_TABLERO[tn]);
+
+    // Calef
+    const clf = getVal('calef') || 'caldera_rad';
+    document.getElementById('su-calef').textContent = clf === 'ninguna' ? 'USD 0' : 'USD ' + fmt(m2 * P_CALEF[clf]);
+  } catch(e) {}
+}
+
+function calcularYMostrar() {
+  const m2 = parseInt(document.getElementById('m2').value);
+  if (!m2 || m2 < 40) {
+    goStep(1);
+    document.getElementById('m2').focus();
+    document.getElementById('m2').style.borderColor = '#C0392B';
+    return;
+  }
+
+  const data = calcular();
+  const low  = Math.round(data.total * 0.9);
+  const high = Math.round(data.total * 1.1);
+
+  document.getElementById('r-total').textContent = `USD ${fmt(low)} — ${fmt(high)}`;
+  document.getElementById('r-ars').textContent = `ARS $${fmt(low*TC)} — $${fmt(high*TC)} · TC $${fmt(TC)}`;
+
+  // Chips de resumen
+  const sis = getVal('sistema') || 'sf';
+  const aber = getVal('aber') || 'dvh';
+  const calef = getVal('calef') || 'caldera_rad';
+  const banos = document.getElementById('banos').value;
+  document.getElementById('r-chips').innerHTML = [
+    data.m2 + 'm²',
+    sis.toUpperCase(),
+    aber.toUpperCase(),
+    calef.replace('_',' '),
+    banos + ' baños',
+  ].map(t => `<span class="chip-tag">${t}</span>`).join('');
+
+  // Reset desglose
+  document.getElementById('dl-locked').style.display = 'flex';
+  document.getElementById('dl-unlocked').style.display = 'none';
+  document.getElementById('lead-form').style.display = 'none';
+  document.getElementById('wa-section').style.display = 'none';
+  document.getElementById('dl-badge').textContent = '🔒 Requiere datos';
+
+  goStep(5);
+}
+
+function showLeadForm() {
+  document.getElementById('dl-locked').style.display = 'none';
+  document.getElementById('lead-form').style.display = 'block';
+  document.getElementById('lead-form').scrollIntoView({ behavior:'smooth', block:'nearest' });
+}
+
+function desbloquearDesglose() {
+  const nombre = document.getElementById('l-nombre').value.trim();
+  const tel    = document.getElementById('l-tel').value.trim();
+  if (!nombre) { document.getElementById('l-nombre').classList.add('err'); document.getElementById('l-nombre').focus(); return; }
+  if (!tel)    { document.getElementById('l-tel').classList.add('err'); document.getElementById('l-tel').focus(); return; }
+
+  // Mostrar desglose
+  const unlocked = document.getElementById('dl-unlocked');
+  unlocked.innerHTML = resultData.rubros.map(r => {
+    const pct = Math.round(r.pct * 100);
+    const barW = Math.round(r.pct * 200); // max 200px
+    return `<div class="rubro-row">
+      <div>
+        <div class="rr-label">${r.label}</div>
+        <div class="rr-bar"><div class="rr-bar-fill" style="width:${barW}px"></div></div>
+      </div>
+      <div style="text-align:right">
+        <div class="rr-val">USD ${fmt(r.usd)}</div>
+        <div style="font-size:10px;color:var(--ink3)">${pct}%</div>
+      </div>
+    </div>`;
+  }).join('');
+  unlocked.style.display = 'block';
+  document.getElementById('lead-form').style.display = 'none';
+  document.getElementById('dl-badge').textContent = '✓ Desglose completo';
+  document.getElementById('wa-section').style.display = 'block';
+
+  // Armar link WA con datos del lead + presupuesto
+  const zona = document.getElementById('l-zona').value || 'no especificó';
+  const etapa = document.getElementById('l-etapa').value || 'no especificó';
+  const msg = encodeURIComponent(
+    resultData.waMsg + `\n👤 ${nombre} · ${zona}\n📋 ${etapa}`
+  );
+  document.getElementById('wa-link').href = `https://wa.me/5491135192030?text=${msg}`;
+}
+
+// ── NAVEGACIÓN ────────────────────────────────────────────────────
+let currentStep = 1;
+function goStep(n) {
+  [1,2,3,4,5].forEach(i => {
+    document.getElementById('p'+i).classList.toggle('on', i===n);
+    const tab = document.getElementById('st'+i);
+    tab.classList.remove('act','done');
+    if (i < n) tab.classList.add('done');
+    if (i === n) tab.classList.add('act');
+  });
+  currentStep = n;
+  window.scrollTo({ top:0, behavior:'smooth' });
+  if (n > 1) updateParciales();
+}
+</script>
+</body>
+</html>
