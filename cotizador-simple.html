@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¿Cuánto cuesta tu casa? — PMD Arquitectura</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --b1:#5BA3C9; --b2:#3B6EA5; --b3:#2B4E7A;
+  --ink:#1C1C1A; --ink2:#52524F; --ink3:#909090;
+  --bg:#F2F5F9; --white:#fff;
+  --border:rgba(28,28,26,.1); --r:3px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;display:flex;flex-direction:column}
+
+/* NAV */
+nav{background:var(--white);border-bottom:1px solid var(--border);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;flex-shrink:0}
+.nav-brand{display:flex;align-items:center;gap:8px}
+.squares{display:flex;gap:3px}
+.sq{width:8px;height:8px;border-radius:1px}
+.s1{background:var(--b1)}.s2{background:var(--b2)}.s3{background:var(--b3)}
+.brand-name{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;letter-spacing:.04em}
+.nav-tag{font-size:11px;color:var(--ink3);letter-spacing:.06em}
+
+/* LAYOUT */
+.page{flex:1;display:flex;align-items:center;justify-content:center;padding:2rem 1rem}
+.box{background:var(--white);border:1px solid var(--border);border-radius:var(--r);width:100%;max-width:560px;overflow:hidden}
+
+/* STEPS INDICATOR */
+.steps{display:flex;border-bottom:1px solid var(--border)}
+.step{flex:1;height:3px;background:var(--border)}
+.step.done{background:var(--b2)}
+.step.active{background:var(--b1)}
+
+/* PANEL */
+.panel{padding:2rem;display:none}
+.panel.on{display:block}
+
+/* EYEBROW */
+.eyebrow{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--b2);margin-bottom:.6rem;display:flex;align-items:center;gap:8px}
+.eyebrow::before{content:'';width:18px;height:1px;background:var(--b2)}
+
+/* TITLE */
+h2{font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:500;line-height:1.15;color:var(--ink);margin-bottom:.5rem}
+.sub{font-size:14px;color:var(--ink2);line-height:1.6;margin-bottom:1.8rem}
+
+/* OPTIONS */
+.opts{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.8rem}
+.opt{border:1.5px solid var(--border);border-radius:var(--r);padding:14px 16px;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:space-between;background:var(--bg)}
+.opt:hover{border-color:var(--b2);background:var(--white)}
+.opt.sel{border-color:var(--b2);background:var(--white)}
+.opt-left{display:flex;flex-direction:column;gap:2px}
+.opt-label{font-size:14px;font-weight:500;color:var(--ink)}
+.opt-desc{font-size:12px;color:var(--ink3)}
+.opt-price{font-size:13px;color:var(--b2);font-weight:500;white-space:nowrap}
+.opt-check{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
+.opt.sel .opt-check{background:var(--b2);border-color:var(--b2)}
+.opt.sel .opt-check::after{content:'';width:6px;height:6px;background:#fff;border-radius:50%}
+
+/* M2 INPUT */
+.m2-wrap{margin-bottom:1.8rem}
+.m2-label{font-size:12px;font-weight:500;color:var(--ink2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem;display:block}
+.m2-row{display:flex;align-items:center;gap:.8rem}
+.m2-input{flex:1;height:52px;border:1.5px solid var(--border);border-radius:var(--r);background:var(--bg);font-family:'DM Sans',sans-serif;font-size:1.4rem;font-weight:400;color:var(--ink);padding:0 1rem;outline:none;transition:border-color .15s;-webkit-appearance:none}
+.m2-input:focus{border-color:var(--b2);background:var(--white)}
+.m2-input.err{border-color:#C0392B}
+.m2-unit{font-size:1.1rem;color:var(--ink3);font-weight:300}
+.m2-hint{font-size:11px;color:var(--ink3);margin-top:.4rem}
+.m2-shortcuts{display:flex;gap:.4rem;margin-top:.6rem;flex-wrap:wrap}
+.m2-sc{height:28px;padding:0 12px;border:1px solid var(--border);border-radius:20px;background:transparent;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--ink2);cursor:pointer;transition:all .15s}
+.m2-sc:hover{background:var(--b2);color:#fff;border-color:var(--b2)}
+
+/* RESULT */
+.result-wrap{margin-bottom:1.8rem}
+.result-range-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--b2);margin-bottom:.4rem}
+.result-range{font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:500;color:var(--ink);line-height:1.1;margin-bottom:.2rem}
+.result-ars{font-size:13px;color:var(--ink3);margin-bottom:1rem}
+.result-note{font-size:12px;color:var(--ink2);background:var(--bg);padding:10px 14px;border-radius:var(--r);line-height:1.6;border-left:3px solid var(--b1)}
+.result-items{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:1rem}
+.ri{background:var(--bg);border-radius:var(--r);padding:10px 12px}
+.ri-label{font-size:11px;color:var(--ink3);margin-bottom:2px}
+.ri-val{font-size:14px;font-weight:500;color:var(--ink)}
+
+/* LEAD FORM */
+.lead-intro{font-size:13px;color:var(--ink2);line-height:1.6;margin-bottom:1.2rem;padding:12px 14px;background:var(--bg);border-radius:var(--r);border-left:3px solid var(--b2)}
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:.8rem}
+.field label{font-size:11px;font-weight:500;color:var(--ink2);text-transform:uppercase;letter-spacing:.06em}
+.field input,.field select{height:44px;padding:0 12px;border:1.5px solid var(--border);border-radius:var(--r);background:var(--bg);font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;transition:all .15s;-webkit-appearance:none}
+.field input:focus,.field select:focus{border-color:var(--b2);background:var(--white)}
+.field input.err{border-color:#C0392B}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+
+/* BUTTONS */
+.btn{width:100%;height:50px;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;cursor:pointer;border:none;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-main{background:var(--b2);color:#fff}
+.btn-main:hover{background:var(--b3)}
+.btn-wa{background:#25D366;color:#fff;margin-top:.6rem}
+.btn-back{background:transparent;color:var(--ink3);border:1px solid var(--border);margin-top:.5rem;height:36px;font-size:13px}
+.btn-back:hover{color:var(--ink);border-color:var(--ink2)}
+
+/* SUMMARY TAG */
+.summary-tag{display:inline-flex;align-items:center;gap:6px;background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-size:12px;color:var(--ink2);margin-bottom:1.2rem}
+.summary-dot{width:6px;height:6px;background:var(--b2);border-radius:50%}
+
+/* SUCCESS */
+.success-panel{padding:2rem;text-align:center;display:none}
+.success-panel.on{display:block}
+.success-icon{width:52px;height:52px;background:var(--b2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:22px}
+.success-icon::after{content:'✓';color:#fff;font-size:22px}
+
+/* FOOTER */
+footer{padding:1rem 2rem;text-align:center;font-size:11px;color:var(--ink3);border-top:1px solid var(--border);background:var(--white)}
+footer a{color:var(--b2);text-decoration:none}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">
+    <div class="squares"><div class="sq s1"></div><div class="sq s2"></div><div class="sq s3"></div></div>
+    <span class="brand-name">PMD</span>
+    <span style="color:var(--ink3);margin:0 4px;font-size:12px">·</span>
+    <span class="nav-tag">Arquitectura</span>
+  </div>
+  <span style="font-size:12px;color:var(--ink3)">Cotizador gratuito</span>
+</nav>
+
+<div class="page">
+<div class="box">
+  <div class="steps">
+    <div class="step active" id="s1"></div>
+    <div class="step" id="s2"></div>
+    <div class="step" id="s3"></div>
+    <div class="step" id="s4"></div>
+  </div>
+
+  <!-- PASO 1: M² -->
+  <div class="panel on" id="p1">
+    <div class="eyebrow">Paso 1 de 3</div>
+    <h2>¿Cuántos metros necesitás?</h2>
+    <p class="sub">La superficie cubierta total de tu proyecto.</p>
+    <div class="m2-wrap">
+      <label class="m2-label">Metros cuadrados cubiertos</label>
+      <div class="m2-row">
+        <input type="number" class="m2-input" id="m2" placeholder="150" min="40" max="800">
+        <span class="m2-unit">m²</span>
+      </div>
+      <div class="m2-hint">Si no sabés exactamente, usá un número redondo aproximado.</div>
+      <div class="m2-shortcuts">
+        <button class="m2-sc" onclick="setM2(80)">80 m²</button>
+        <button class="m2-sc" onclick="setM2(120)">120 m²</button>
+        <button class="m2-sc" onclick="setM2(160)">160 m²</button>
+        <button class="m2-sc" onclick="setM2(200)">200 m²</button>
+        <button class="m2-sc" onclick="setM2(280)">280 m²</button>
+        <button class="m2-sc" onclick="setM2(350)">350 m²</button>
+      </div>
+    </div>
+    <button class="btn btn-main" onclick="goP2()">Siguiente →</button>
+  </div>
+
+  <!-- PASO 2: NIVEL -->
+  <div class="panel" id="p2">
+    <div class="eyebrow">Paso 2 de 3</div>
+    <h2>¿Cómo imaginás las terminaciones?</h2>
+    <p class="sub">No te preocupés por los detalles técnicos, elegí el que más se acerca a tu idea.</p>
+    <div class="opts" id="nivel-opts">
+      <div class="opt" onclick="selNivel(this,'basica')">
+        <div class="opt-left">
+          <span class="opt-label">Funcional y prolija</span>
+          <span class="opt-desc">Piso cerámico, ventanas estándar, cocina práctica. Entra, vive, es tuya.</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="opt-price">desde USD 410/m²</span>
+          <div class="opt-check"></div>
+        </div>
+      </div>
+      <div class="opt sel" onclick="selNivel(this,'media_alta')">
+        <div class="opt-left">
+          <span class="opt-label">Con onda y cómoda</span>
+          <span class="opt-desc">DVH negro, porcelanato, cocina con isla. El estándar de Nordelta / barrios privados.</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="opt-price">desde USD 600/m²</span>
+          <div class="opt-check"></div>
+        </div>
+      </div>
+      <div class="opt" onclick="selNivel(this,'alta')">
+        <div class="opt-left">
+          <span class="opt-label">Premium, sin detalles</span>
+          <span class="opt-desc">Aberturas importadas RPT, domótica, materiales de diseño. Cada ambiente pensado.</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="opt-price">desde USD 850/m²</span>
+          <div class="opt-check"></div>
+        </div>
+      </div>
+      <div class="opt" onclick="selNivel(this,'premium')">
+        <div class="opt-left">
+          <span class="opt-label">Lo mejor de lo mejor</span>
+          <span class="opt-desc">Schüco, KNX, spa, cocina importada. Sin límites de calidad.</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="opt-price">desde USD 1.100/m²</span>
+          <div class="opt-check"></div>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-main" onclick="goP3()">Ver mi estimación →</button>
+    <button class="btn btn-back" onclick="go(1)">← Atrás</button>
+  </div>
+
+  <!-- PASO 3: RESULTADO + DATOS -->
+  <div class="panel" id="p3">
+    <div class="eyebrow">Tu estimación</div>
+    <div class="summary-tag"><div class="summary-dot"></div><span id="summary-txt">–</span></div>
+    <div class="result-wrap">
+      <div class="result-range-label">Inversión estimada — sin terreno</div>
+      <div class="result-range" id="r-range">–</div>
+      <div class="result-ars" id="r-ars">–</div>
+      <div class="result-items" id="r-items"></div>
+      <div class="result-note" id="r-note">–</div>
+    </div>
+
+    <div style="border-top:1px solid var(--border);padding-top:1.5rem;margin-top:.5rem">
+      <div class="lead-intro">Mandanos tu WhatsApp y te enviamos el desglose completo. Te contactamos para coordinar una reunión, sin compromiso.</div>
+      <div class="field-row">
+        <div class="field">
+          <label>Tu nombre</label>
+          <input type="text" id="l-nombre" placeholder="Nombre y apellido">
+        </div>
+        <div class="field">
+          <label>WhatsApp</label>
+          <input type="tel" id="l-tel" placeholder="+54 9 11...">
+        </div>
+      </div>
+      <div class="field">
+        <label>¿En qué etapa estás?</label>
+        <select id="l-etapa">
+          <option value="">Seleccioná una opción</option>
+          <option>Tengo terreno y quiero arrancar</option>
+          <option>Estoy buscando terreno</option>
+          <option>Solo quiero saber el costo</option>
+          <option>Ya tengo proyecto, busco constructor</option>
+        </select>
+      </div>
+      <button class="btn btn-main" onclick="enviarLead()">Recibir desglose completo →</button>
+      <button class="btn btn-back" onclick="go(2)">← Cambiar terminaciones</button>
+    </div>
+  </div>
+
+  <!-- ÉXITO -->
+  <div class="success-panel" id="p4">
+    <div class="success-icon"></div>
+    <h2 style="font-size:1.6rem;margin-bottom:.5rem">¡Listo!</h2>
+    <p style="font-size:14px;color:var(--ink2);margin-bottom:1.5rem;line-height:1.7">Te contactamos en las próximas horas con el desglose completo. Si querés hablar ahora mismo, escribinos directamente.</p>
+    <a id="wa-link" href="#" target="_blank">
+      <button class="btn btn-wa">Hablar por WhatsApp ahora</button>
+    </a>
+    <div style="margin-top:1.5rem;font-size:12px;color:var(--ink3)">
+      <a href="https://pmdarquitectura.com.ar" style="color:var(--b2)">Ver el portfolio de PMD →</a>
+    </div>
+  </div>
+</div>
+</div>
+
+<footer>
+  Costos verificados en obras reales · Mar 2026 · TC $1.425 ·
+  <a href="https://pmdarquitectura.com.ar">pmdarquitectura.com.ar</a>
+</footer>
+
+<script>
+const TC = 1425;
+const COSTOS = {
+  basica:     { base:370, mo:160, label:'Funcional y prolija' },
+  media_alta: { base:600, mo:209, label:'Con onda y cómoda' },
+  alta:       { base:800, mo:240, label:'Premium' },
+  premium:    { base:1100, mo:280, label:'Lo mejor de lo mejor' },
+};
+const NOTAS = {
+  basica:     'Base verificada PMD. Cerámicos, aberturas de aluminio simple, cocina práctica. Todo bien resuelto, nada de más.',
+  media_alta: 'El estándar de los barrios privados de GBA Norte. Verificado en obra real Naudir 308 · 190m². Aberturas DVH negro, porcelanato, terminaciones de nivel.',
+  alta:       'Materiales importados, aberturas RPT, domótica básica. Para quienes no quieren comprometer ningún detalle.',
+  premium:    'Sin límite de calidad. Schüco, KNX, cocina importada, spa. Proyectos que duran generaciones.',
+};
+const fmt = n => Math.round(n).toLocaleString('es-AR');
+
+let estado = { m2: 0, nivel: 'media_alta' };
+let currentPanel = 1;
+
+function go(n) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.step').forEach((s,i) => {
+    s.classList.remove('active','done');
+    if (i+1 < n) s.classList.add('done');
+    if (i+1 === n) s.classList.add('active');
+  });
+  const p = document.getElementById('p'+n);
+  if (p) p.classList.add('on');
+  currentPanel = n;
+  window.scrollTo(0,0);
+}
+
+function setM2(v) {
+  document.getElementById('m2').value = v;
+  document.getElementById('m2').classList.remove('err');
+}
+
+function goP2() {
+  const v = parseInt(document.getElementById('m2').value);
+  if (!v || v < 40 || v > 800) {
+    document.getElementById('m2').classList.add('err');
+    document.getElementById('m2').focus();
+    return;
+  }
+  document.getElementById('m2').classList.remove('err');
+  estado.m2 = v;
+  go(2);
+}
+
+function selNivel(el, nivel) {
+  document.querySelectorAll('#nivel-opts .opt').forEach(o => o.classList.remove('sel'));
+  el.classList.add('sel');
+  estado.nivel = nivel;
+}
+
+function goP3() {
+  calcular();
+  go(3);
+}
+
+function calcular() {
+  const { m2, nivel } = estado;
+  const c = COSTOS[nivel];
+  const total = m2 * c.base;
+  const low = Math.round(total * 0.9);
+  const high = Math.round(total * 1.1);
+
+  document.getElementById('summary-txt').textContent =
+    `${m2} m² · ${c.label}`;
+
+  document.getElementById('r-range').textContent =
+    `USD ${fmt(low)} — ${fmt(high)}`;
+
+  document.getElementById('r-ars').textContent =
+    `ARS $${fmt(low * TC)} — $${fmt(high * TC)}`;
+
+  const mat = Math.round(m2 * (c.base - c.mo) * 0.7);
+  const mo  = Math.round(m2 * c.mo);
+
+  document.getElementById('r-items').innerHTML = `
+    <div class="ri"><div class="ri-label">Materiales</div><div class="ri-val">USD ${fmt(mat)}</div></div>
+    <div class="ri"><div class="ri-label">Mano de obra</div><div class="ri-val">USD ${fmt(mo)}</div></div>
+    <div class="ri"><div class="ri-label">Por m²</div><div class="ri-val">USD ${fmt(c.base)}</div></div>
+    <div class="ri"><div class="ri-label">TC referencia</div><div class="ri-val">$${fmt(TC)}</div></div>
+  `;
+  document.getElementById('r-note').textContent = NOTAS[nivel];
+}
+
+function enviarLead() {
+  const nombre = document.getElementById('l-nombre').value.trim();
+  const tel    = document.getElementById('l-tel').value.trim();
+
+  if (!nombre) {
+    document.getElementById('l-nombre').classList.add('err');
+    document.getElementById('l-nombre').focus();
+    return;
+  }
+  if (!tel) {
+    document.getElementById('l-tel').classList.add('err');
+    document.getElementById('l-tel').focus();
+    return;
+  }
+
+  const { m2, nivel } = estado;
+  const c = COSTOS[nivel];
+  const total = m2 * c.base;
+  const low = Math.round(total * 0.9);
+  const high = Math.round(total * 1.1);
+  const etapa = document.getElementById('l-etapa').value || 'no especificó';
+
+  const msg = encodeURIComponent(
+    `Hola PMD! Calculé mi proyecto en el cotizador:\n` +
+    `📐 ${m2}m² · ${c.label}\n` +
+    `💰 USD ${fmt(low)}–${fmt(high)}\n` +
+    `📋 Etapa: ${etapa}\n\n` +
+    `Me interesa coordinar una reunión.`
+  );
+
+  document.getElementById('wa-link').href =
+    `https://wa.me/5491135192030?text=${msg}`;
+
+  // Simular envío (en prod: fetch a Firebase/backend)
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('on'));
+  document.getElementById('p4').classList.add('on');
+  document.querySelectorAll('.step').forEach(s => s.classList.add('done'));
+}
+</script>
+</body>
+</html>
