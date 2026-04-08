@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PMD Arquitectura — Construcción y Diseño · GBA Norte</title>
+<meta name="description" content="Constructora y estudio de arquitectura en GBA Norte. Especialistas en steel framing, obra nueva y remodelaciones en Nordelta, Tigre, San Isidro, Escobar.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue1: #5BA3C9;
+  --blue2: #3B6EA5;
+  --blue3: #2B4E7A;
+  --ink: #1E1E1C;
+  --ink2: #4A4A48;
+  --ink3: #8A8A87;
+  --bg: #F4F6F9;
+  --bg2: #E8EDF4;
+  --white: #FFFFFF;
+  --border: rgba(30,30,28,0.10);
+  --border2: rgba(30,30,28,0.06);
+  --r: 2px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;overflow-x:hidden}
+img{display:block;max-width:100%}
+a{text-decoration:none;color:inherit}
+
+/* ── PMD SQUARES motif ─────────────────────── */
+.squares{display:inline-flex;gap:3px;align-items:center}
+.sq{width:9px;height:9px;border-radius:1px}
+.sq1{background:var(--blue1)}
+.sq2{background:var(--blue2)}
+.sq3{background:var(--blue3)}
+.squares.lg .sq{width:14px;height:14px}
+.squares.xl .sq{width:20px;height:20px}
+
+/* ── NAV ───────────────────────────────────── */
+nav{position:sticky;top:0;z-index:200;background:var(--white);border-bottom:1px solid var(--border);height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem}
+.nav-logo{display:flex;align-items:center;gap:10px}
+.nav-logo img{height:36px;width:auto}
+.nav-links{display:flex;gap:2rem;font-size:13px;font-weight:400}
+.nav-links a{color:var(--ink2);transition:color .15s}
+.nav-links a:hover{color:var(--blue2)}
+.nav-cta{height:36px;padding:0 18px;background:var(--blue2);color:#fff;border-radius:var(--r);font-size:13px;font-weight:500;border:none;cursor:pointer;transition:background .15s;white-space:nowrap}
+.nav-cta:hover{background:var(--blue3)}
+
+/* ── HERO ──────────────────────────────────── */
+.hero{min-height:92vh;display:grid;grid-template-columns:1fr 1fr;position:relative;overflow:hidden}
+.hero-left{background:var(--ink);display:flex;flex-direction:column;justify-content:flex-end;padding:4rem 3rem;position:relative;z-index:2}
+.hero-left::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background-image:repeating-linear-gradient(0deg,transparent,transparent 59px,rgba(255,255,255,.03) 59px,rgba(255,255,255,.03) 60px),repeating-linear-gradient(90deg,transparent,transparent 59px,rgba(255,255,255,.03) 59px,rgba(255,255,255,.03) 60px);pointer-events:none}
+.hero-eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue1);margin-bottom:1.2rem;display:flex;align-items:center;gap:10px}
+.hero-eyebrow::before{content:'';width:24px;height:1px;background:var(--blue1)}
+.hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2.8rem,4.5vw,4.2rem);font-weight:500;line-height:1.1;color:#fff;margin-bottom:1.5rem}
+.hero h1 em{font-style:italic;color:var(--blue1)}
+.hero-desc{font-size:15px;color:rgba(255,255,255,.55);max-width:380px;line-height:1.7;margin-bottom:2.5rem}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+.btn-primary{height:48px;padding:0 28px;background:var(--blue2);color:#fff;border:none;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:background .15s}
+.btn-primary:hover{background:var(--blue3)}
+.btn-ghost{height:48px;padding:0 28px;background:transparent;color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.2);border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer;transition:all .15s}
+.btn-ghost:hover{border-color:rgba(255,255,255,.5);color:#fff}
+.hero-stats{display:flex;gap:2rem;margin-top:3rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,.08)}
+.stat-val{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:500;color:#fff}
+.stat-label{font-size:11px;color:rgba(255,255,255,.4);letter-spacing:.06em;margin-top:2px}
+.hero-right{position:relative;background:#1a1a18}
+.hero-right img{width:100%;height:100%;object-fit:cover;opacity:.8}
+.hero-badge{position:absolute;bottom:2rem;left:2rem;background:var(--white);border-radius:var(--r);padding:14px 18px;display:flex;flex-direction:column;gap:4px}
+.hb-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)}
+.hb-val{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:500;color:var(--ink)}
+
+/* ── SECTION GENERIC ───────────────────────── */
+section{padding:5rem 2.5rem}
+.section-eyebrow{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--blue2);margin-bottom:1rem;display:flex;align-items:center;gap:8px}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,3.5vw,3rem);font-weight:500;color:var(--ink);margin-bottom:1rem;line-height:1.15}
+.section-sub{font-size:15px;color:var(--ink2);max-width:540px;line-height:1.7}
+.section-header{margin-bottom:3rem}
+
+/* ── DIFERENCIADORES ───────────────────────── */
+.dif-section{background:var(--white)}
+.dif-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border)}
+.dif-card{background:var(--white);padding:2.5rem 2rem;display:flex;flex-direction:column;gap:1rem}
+.dif-num{font-family:'Cormorant Garamond',serif;font-size:3.5rem;font-weight:400;color:var(--blue1);line-height:1;opacity:.4}
+.dif-title{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:500;color:var(--ink)}
+.dif-desc{font-size:13px;color:var(--ink2);line-height:1.7}
+
+/* ── PORTFOLIO ─────────────────────────────── */
+.portfolio-section{background:var(--bg)}
+.portfolio-filters{display:flex;gap:8px;margin-bottom:2.5rem;flex-wrap:wrap}
+.pf-btn{height:34px;padding:0 16px;border:1px solid var(--border);border-radius:20px;background:transparent;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--ink2);cursor:pointer;transition:all .15s}
+.pf-btn.active,.pf-btn:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+.portfolio-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border)}
+.pj-card{background:var(--white);overflow:hidden;cursor:pointer;position:relative}
+.pj-card:hover .pj-overlay{opacity:1}
+.pj-img{aspect-ratio:4/3;background:var(--bg2);overflow:hidden}
+.pj-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease}
+.pj-card:hover .pj-img img{transform:scale(1.04)}
+.pj-body{padding:1.2rem}
+.pj-tag{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--blue2);margin-bottom:6px}
+.pj-name{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:500;color:var(--ink);margin-bottom:4px}
+.pj-meta{font-size:12px;color:var(--ink3)}
+.pj-overlay{position:absolute;inset:0;background:rgba(43,78,122,.85);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .25s}
+.pj-overlay-text{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:#fff;border:1px solid rgba(255,255,255,.4);padding:10px 20px;border-radius:var(--r)}
+
+/* ── PROCESO ───────────────────────────────── */
+.proceso-section{background:var(--ink)}
+.proceso-section .section-title{color:#fff}
+.proceso-section .section-sub{color:rgba(255,255,255,.5)}
+.proceso-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.08);margin-top:3rem}
+.ps-card{background:var(--ink);padding:2rem 1.5rem;position:relative}
+.ps-card::after{content:'→';position:absolute;right:-12px;top:50%;transform:translateY(-50%);color:var(--blue1);font-size:1.2rem;z-index:1}
+.ps-card:last-child::after{display:none}
+.ps-num{font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:400;color:var(--blue1);opacity:.25;line-height:1;margin-bottom:.8rem}
+.ps-title{font-size:14px;font-weight:500;color:#fff;margin-bottom:.5rem}
+.ps-desc{font-size:12px;color:rgba(255,255,255,.45);line-height:1.6}
+.ps-time{display:inline-block;font-size:10px;letter-spacing:.08em;background:rgba(91,163,201,.15);color:var(--blue1);padding:3px 10px;border-radius:10px;margin-top:.8rem}
+
+/* ── PRESUPUESTADOR ────────────────────────── */
+.presup-section{background:var(--bg2)}
+.presup-inner{display:grid;grid-template-columns:1fr 1.8fr;gap:4rem;align-items:start}
+.presup-left .section-title{max-width:360px}
+.presup-highlight{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-top:2rem}
+.ph-row{display:flex;justify-content:space-between;align-items:baseline;padding:8px 0;border-bottom:1px solid var(--border2);font-size:13px}
+.ph-row:last-child{border:none}
+.ph-label{color:var(--ink2)}
+.ph-val{font-weight:500;color:var(--ink)}
+.presup-widget{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:2rem}
+.pw-title{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:500;margin-bottom:1.5rem;color:var(--ink);display:flex;align-items:center;gap:10px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+.form-field{display:flex;flex-direction:column;gap:5px}
+.form-field label{font-size:11px;font-weight:500;color:var(--ink2);letter-spacing:.04em;text-transform:uppercase}
+.form-field input,.form-field select{height:40px;padding:0 12px;border:1px solid var(--border);border-radius:var(--r);background:var(--bg);font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;transition:border-color .15s;-webkit-appearance:none}
+.form-field input:focus,.form-field select:focus{border-color:var(--blue2);background:var(--white)}
+.radio-row{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:1rem}
+.radio-opt{border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;cursor:pointer;transition:all .15s;background:var(--bg)}
+.radio-opt.sel{border-color:var(--blue2);background:var(--white)}
+.radio-opt input{display:none}
+.ro-label{font-size:13px;font-weight:500;color:var(--ink);margin-bottom:2px}
+.ro-desc{font-size:11px;color:var(--ink3)}
+.result-box{background:var(--ink);border-radius:var(--r);padding:1.5rem;margin-top:1.2rem;display:none}
+.result-box.show{display:block}
+.rb-label{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--blue1);margin-bottom:.5rem}
+.rb-range{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:500;color:#fff;margin-bottom:.3rem}
+.rb-ars{font-size:12px;color:rgba(255,255,255,.45);margin-bottom:1rem}
+.rb-breakdown{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:1rem}
+.rbb{background:rgba(255,255,255,.05);border-radius:2px;padding:10px;font-size:11px;color:rgba(255,255,255,.5)}
+.rbb strong{display:block;font-size:14px;color:#fff;font-weight:500;margin-bottom:2px}
+.calc-btn{width:100%;height:46px;background:var(--blue2);color:#fff;border:none;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:background .15s;margin-top:1rem}
+.calc-btn:hover{background:var(--blue3)}
+.wa-btn{width:100%;height:46px;background:#25D366;color:#fff;border:none;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;margin-top:.6rem;display:none}
+.wa-btn.show{display:block}
+
+/* ── EQUIPO ────────────────────────────────── */
+.eq-q{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-style:italic;color:var(--ink);line-height:1.6}
+
+/* ── ZONAS ─────────────────────────────────── */
+.zonas-section{background:var(--ink)}
+.zonas-section .section-title{color:#fff}
+.zonas-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:rgba(255,255,255,.08);margin-top:2.5rem}
+.zona-card{background:var(--ink);padding:2rem;display:flex;flex-direction:column;gap:.8rem}
+.zona-name{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:500;color:#fff}
+.zona-subs{font-size:12px;color:rgba(255,255,255,.4);line-height:1.6}
+.zona-tag{display:inline-block;font-size:10px;background:rgba(91,163,201,.15);color:var(--blue1);padding:3px 10px;border-radius:10px}
+
+/* ── CONTACTO ──────────────────────────────── */
+.contacto-section{background:var(--bg)}
+.contacto-inner{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start}
+.contact-info{display:flex;flex-direction:column;gap:1.5rem;margin-top:2rem}
+.ci-item{display:flex;flex-direction:column;gap:4px}
+.ci-label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)}
+.ci-val{font-size:15px;color:var(--ink);font-weight:400}
+.ci-sub{font-size:12px;color:var(--ink3)}
+.contact-form{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:2rem}
+.cf-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:500;margin-bottom:1.5rem;color:var(--ink)}
+.cf-field{display:flex;flex-direction:column;gap:5px;margin-bottom:1rem}
+.cf-field label{font-size:11px;font-weight:500;color:var(--ink2);text-transform:uppercase;letter-spacing:.04em}
+.cf-field input,.cf-field select,.cf-field textarea{padding:10px 12px;border:1px solid var(--border);border-radius:var(--r);background:var(--bg);font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;transition:border-color .15s;-webkit-appearance:none}
+.cf-field input:focus,.cf-field select:focus,.cf-field textarea:focus{border-color:var(--blue2);background:var(--white)}
+.cf-field textarea{resize:vertical;min-height:90px}
+.cf-submit{width:100%;height:48px;background:var(--ink);color:#fff;border:none;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:background .15s}
+.cf-submit:hover{background:var(--blue3)}
+.cf-wa{width:100%;height:48px;background:#25D366;color:#fff;border:none;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;margin-top:.6rem}
+
+/* ── FOOTER ────────────────────────────────── */
+footer{background:var(--ink);padding:3rem 2.5rem;border-top:1px solid rgba(255,255,255,.06)}
+.footer-inner{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1.5rem}
+.footer-logo{display:flex;align-items:center;gap:10px}
+.footer-logo img{height:32px;filter:brightness(0) invert(1);opacity:.7}
+.footer-links{display:flex;gap:1.5rem}
+.footer-links a{font-size:12px;color:rgba(255,255,255,.35);transition:color .15s}
+.footer-links a:hover{color:rgba(255,255,255,.7)}
+.footer-copy{font-size:12px;color:rgba(255,255,255,.25)}
+
+/* ── ANIMATIONS ────────────────────────────── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.fade-up{animation:fadeUp .6s ease both}
+.delay-1{animation-delay:.1s}
+.delay-2{animation-delay:.2s}
+.delay-3{animation-delay:.3s}
+
+
+/* ── CALCULADOR EXTRA CSS ─────────────────────── */
+.pw-section-title { font-size:10px; font-weight:500; letter-spacing:.12em; text-transform:uppercase; color:var(--ink3); margin:1.2rem 0 .6rem; padding-bottom:6px; border-bottom:1px solid var(--border2); }
+.check-grid-pw { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:.5rem; }
+.check-pw { display:flex; align-items:flex-start; gap:8px; padding:10px; border:1px solid var(--border); border-radius:var(--r); cursor:pointer; background:var(--bg); transition:all .15s; font-size:13px; }
+.check-pw:hover { border-color:var(--blue2); background:var(--white); }
+.check-pw input { margin-top:2px; accent-color:var(--blue2); flex-shrink:0; }
+.cp-label { font-size:12px; font-weight:500; color:var(--ink); }
+.cp-sub { font-size:11px; color:var(--ink3); }
+@media(max-width:600px){ .check-grid-pw { grid-template-columns:repeat(2,1fr); } }
+
+
+/* ── COTIZADOR DOBLE MODO ─────────────────────── */
+.presup-section{background:var(--bg2);padding:5rem 2.5rem}
+.cotiz-wrap{max-width:600px;margin:0 auto;background:var(--white);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;position:relative}
+.cotiz-prog{height:3px;display:flex;gap:0}
+.cotiz-pr{flex:1;background:var(--border);transition:background .3s}
+.cotiz-mode-badge{display:none;align-items:center;gap:5px;position:absolute;top:1rem;right:1rem;z-index:10;background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:3px 10px;font-size:11px;color:var(--ink2);cursor:pointer}
+.cotiz-mode-badge:hover{border-color:var(--blue2);color:var(--blue2)}
+.cotiz-panel{padding:2rem;display:none;animation:fadeIn .2s ease both}
+.cotiz-panel.on{display:block}
+.c-eyebrow{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue2);margin-bottom:.6rem;display:flex;align-items:center;gap:8px}
+.c-eyebrow::before{content:'';width:18px;height:1px;background:var(--blue2)}
+.c-title{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:500;line-height:1.15;color:var(--ink);margin-bottom:.5rem}
+.c-sub{font-size:13px;color:var(--ink2);line-height:1.6;margin-bottom:1.5rem}
+.cotiz-mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:.5rem}
+.cotiz-mode-card{border:1.5px solid var(--border);border-radius:var(--r);padding:1.2rem;cursor:pointer;transition:all .18s;background:var(--bg);text-align:left}
+.cotiz-mode-card:hover{border-color:var(--blue2);background:var(--white)}
+.cmc-icon{font-size:20px;margin-bottom:.6rem;line-height:1}
+.cmc-title{font-size:14px;font-weight:500;color:var(--ink);margin-bottom:.3rem}
+.cmc-desc{font-size:12px;color:var(--ink3);line-height:1.5}
+.cmc-badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;margin-top:.6rem}
+.badge-pro{background:var(--bg2);color:var(--blue2)}
+.badge-guiado{background:#EAF3DE;color:#3B6D11}
+.c-m2-wrap{margin-bottom:1.8rem}
+.c-label{font-size:11px;font-weight:500;color:var(--ink2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.5rem;display:block}
+.c-m2-row{display:flex;align-items:center;gap:.8rem}
+.c-m2-in{flex:1;height:52px;border:1.5px solid var(--border);border-radius:var(--r);background:var(--bg);font-family:'DM Sans',sans-serif;font-size:1.4rem;color:var(--ink);padding:0 1rem;outline:none;transition:border-color .15s;-webkit-appearance:none}
+.c-m2-in:focus{border-color:var(--blue2);background:var(--white)}
+.c-m2-in.c-err{border-color:#C0392B}
+.c-m2-unit{font-size:1.1rem;color:var(--ink3);font-weight:300}
+.c-hint{font-size:11px;color:var(--ink3);margin-top:.4rem}
+.c-chips{display:flex;gap:.4rem;margin-top:.6rem;flex-wrap:wrap}
+.c-chip{height:28px;padding:0 12px;border:1px solid var(--border);border-radius:20px;background:transparent;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--ink2);cursor:pointer;transition:all .15s}
+.c-chip:hover{background:var(--blue2);color:#fff;border-color:var(--blue2)}
+.c-opts{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.8rem}
+.c-opt{border:1.5px solid var(--border);border-radius:var(--r);padding:14px 16px;cursor:pointer;transition:all .15s;background:var(--bg);display:flex;align-items:flex-start;gap:12px}
+.c-opt:hover,.c-opt.c-sel{border-color:var(--blue2);background:var(--white)}
+.c-opt-body{flex:1}
+.c-opt-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;gap:8px}
+.c-opt-label{font-size:14px;font-weight:500;color:var(--ink)}
+.c-opt-price{font-size:12px;color:var(--blue2);font-weight:500;white-space:nowrap}
+.c-opt-desc{font-size:12px;color:var(--ink3);line-height:1.5}
+.c-opt-detail{font-size:11px;color:var(--blue2);margin-top:4px;display:none}
+.c-opt-detail.c-show{display:block}
+.c-opt-check{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--border);flex-shrink:0;transition:all .15s;margin-top:2px}
+.c-opt-check.c-sel{background:var(--blue2);border-color:var(--blue2);display:flex;align-items:center;justify-content:center}
+.c-opt-check.c-sel::after{content:'';width:6px;height:6px;background:#fff;border-radius:50%}
+.c-extra-row{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border:1px solid var(--border);border-radius:var(--r);margin-bottom:.6rem;cursor:pointer;background:var(--bg);transition:all .15s}
+.c-extra-row:hover,.c-extra-row.c-sel{border-color:var(--blue2);background:var(--white)}
+.cer-left{display:flex;flex-direction:column;gap:2px}
+.cer-label{font-size:13px;font-weight:500;color:var(--ink)}
+.cer-desc{font-size:11px;color:var(--ink3)}
+.cer-toggle{width:36px;height:20px;border-radius:10px;background:var(--border);position:relative;transition:background .2s;flex-shrink:0}
+.c-extra-row.c-sel .cer-toggle{background:var(--blue2)}
+.cer-toggle::after{content:'';position:absolute;width:14px;height:14px;background:#fff;border-radius:50%;top:3px;left:3px;transition:transform .2s}
+.c-extra-row.c-sel .cer-toggle::after{transform:translateX(16px)}
+.c-result-hero{margin-bottom:1rem}
+.c-result-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue2);margin-bottom:.3rem}
+.c-result-num{font-family:'Cormorant Garamond',serif;font-size:2.6rem;font-weight:500;color:var(--ink);line-height:1.1}
+.c-result-ars{font-size:12px;color:var(--ink3);margin-top:.2rem;margin-bottom:.8rem}
+.c-result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:.8rem}
+.crg-item{background:var(--bg);border-radius:var(--r);padding:10px}
+.crg-label{font-size:10px;color:var(--ink3);margin-bottom:2px;text-transform:uppercase;letter-spacing:.06em}
+.crg-val{font-size:13px;font-weight:500;color:var(--ink)}
+.c-result-note{font-size:12px;color:var(--ink2);line-height:1.6;padding:10px 14px;background:var(--bg);border-radius:var(--r);border-left:3px solid var(--blue1);margin-bottom:1.2rem}
+.c-summary-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem}
+.c-chip-tag{background:var(--bg);padding:3px 10px;border-radius:20px;border:1px solid var(--border);font-size:11px;color:var(--ink2)}
+.c-lead-sep{border-top:1px solid var(--border);padding-top:1.5rem;margin-top:.5rem}
+.c-lead-intro{font-size:13px;color:var(--ink2);line-height:1.6;margin-bottom:1rem}
+.c-field-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:.8rem}
+.c-field{display:flex;flex-direction:column;gap:4px}
+.c-field label{font-size:11px;font-weight:500;color:var(--ink2);text-transform:uppercase;letter-spacing:.06em}
+.c-field input,.c-field select{height:44px;padding:0 12px;border:1.5px solid var(--border);border-radius:var(--r);background:var(--bg);font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);outline:none;transition:all .15s;-webkit-appearance:none}
+.c-field input:focus,.c-field select:focus{border-color:var(--blue2);background:var(--white)}
+.c-field input.c-err{border-color:#C0392B}
+.c-btn{width:100%;height:48px;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;border:none;transition:all .15s;display:flex;align-items:center;justify-content:center}
+.c-btn-main{background:var(--blue2);color:#fff;margin-bottom:.5rem}
+.c-btn-main:hover{background:var(--blue3)}
+.c-btn-wa{background:#25D366;color:#fff;width:100%;height:48px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;border:none;border-radius:var(--r)}
+.c-btn-ghost{background:transparent;color:var(--ink3);border:1px solid var(--border);height:36px;font-size:13px;margin-top:0}
+.c-btn-ghost:hover{color:var(--ink);border-color:var(--ink2)}
+.c-success-icon{width:52px;height:52px;background:var(--blue2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:22px;color:#fff}
+.c-success-icon::after{content:'✓';color:#fff;font-size:22px}
+
+/* ── RESPONSIVE ────────────────────────────── */
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr}
+  .hero-right{min-height:50vw}
+  .dif-grid,.portfolio-grid,.proceso-steps,.zonas-grid,.presup-inner,.contacto-inner{grid-template-columns:1fr}
+  [style*="repeat(4,1fr)"],[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important}
+  .ps-card::after{display:none}
+  nav .nav-links{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/4QAiRXhpZgAATU0AKgAAAAgAAQESAAMAAAABAAEAAAAAAAD/7QAsUGhvdG9zaG9wIDMuMAA4QklNA+0AAAAAABAASAAAAAEAAQBIAAAAAQAB/+FGkWh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8APD94cGFja2V0IGJlZ2lu..." alt="PMD Arquitectura" onerror="this.style.display='none'">
+    <div style="display:flex;flex-direction:column;gap:0px">
+      <div style="display:flex;align-items:center;gap:6px">
+        <div class="squares"><div class="sq sq1"></div><div class="sq sq2"></div><div class="sq sq3"></div></div>
+        <span style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;letter-spacing:.04em;color:var(--ink)">PMD</span>
+      </div>
+      <span style="font-size:9px;letter-spacing:.18em;color:var(--ink3);text-transform:uppercase;margin-left:18px">Arquitectura</span>
+    </div>
+  </div>
+  <div class="nav-links">
+    <a href="#portfolio">Proyectos</a>
+    <a href="#proceso">Proceso</a>
+    <a href="#presupuestador">Presupuestador</a>
+    
+    <a href="#contacto">Contacto</a>
+  </div>
+  <button class="nav-cta" onclick="document.getElementById('contacto').scrollIntoView({behavior:'smooth'})">Consulta gratuita</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">PMD Arquitectura · GBA Norte</div>
+    <h1 class="fade-up">Construimos<br>tu casa. <em>Sin<br>sorpresas.</em></h1>
+    <p class="hero-desc fade-up delay-1">Especialistas en steel framing, obra nueva y remodelaciones en Nordelta, Tigre, San Isidro y Escobar. Llave en mano, desde el primer boceto hasta la mudanza.</p>
+    <div class="hero-actions fade-up delay-2">
+      <button class="btn-primary" onclick="document.getElementById('presupuestador').scrollIntoView({behavior:'smooth'})">Calculá el costo de tu obra</button>
+      <button class="btn-ghost" onclick="document.getElementById('portfolio').scrollIntoView({behavior:'smooth'})">Ver proyectos</button>
+    </div>
+    <div class="hero-stats fade-up delay-3">
+      <div><div class="stat-val">+50</div><div class="stat-label">Obras realizadas</div></div>
+      <div><div class="stat-val">10</div><div class="stat-label">Años de experiencia</div></div>
+      <div><div class="stat-val">2 años</div><div class="stat-label">Garantía de obra</div></div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div style="width:100%;height:100%;background:linear-gradient(135deg,#1a2535 0%,#2B4E7A 100%);display:flex;align-items:center;justify-content:center">
+      <div style="text-align:center;opacity:.15">
+        <div class="squares xl" style="justify-content:center;margin-bottom:1rem"><div class="sq sq1" style="width:40px;height:40px"></div><div class="sq sq2" style="width:40px;height:40px"></div><div class="sq sq3" style="width:40px;height:40px"></div></div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:6rem;font-weight:500;color:#fff;letter-spacing:.1em">PMD</div>
+      </div>
+    </div>
+    <div class="hero-badge">
+      <span class="hb-label">Proyecto activo</span>
+      <span class="hb-val">Casa Talar · 493m²</span>
+    </div>
+  </div>
+</section>
+
+<!-- DIFERENCIADORES -->
+<section class="dif-section" id="nosotros">
+  <div class="section-header" style="text-align:center;max-width:600px;margin:0 auto 0">
+    <div class="section-eyebrow" style="justify-content:center"><div class="squares"><div class="sq sq1"></div><div class="sq sq2"></div><div class="sq sq3"></div></div>Por qué PMD</div>
+    <div class="section-title">Lo que nos diferencia</div>
+  </div>
+  <div class="dif-grid" style="margin-top:3rem">
+    <div class="dif-card">
+      <div class="dif-num">01</div>
+      <div class="dif-title">Precios transparentes</div>
+      <div class="dif-desc">Usamos costos reales verificados de obras propias para presupuestar. Sin sorpresas, sin inflación de números. Lo que se acuerda es lo que se paga.</div>
+    </div>
+    <div class="dif-card">
+      <div class="dif-num">02</div>
+      <div class="dif-title">Especialistas en steel framing</div>
+      <div class="dif-desc">Más de 50 obras en steel framing en GBA Norte. Más rápido, más eficiente, con menor impacto ambiental. Somos referencia en la zona.</div>
+    </div>
+    <div class="dif-card">
+      <div class="dif-num">03</div>
+      <div class="dif-title">Llave en mano real</div>
+      <div class="dif-desc">Desde el anteproyecto hasta la entrega, el cliente tiene un solo interlocutor. Gestionamos proveedores, materiales, permisos y ejecución.</div>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section class="portfolio-section" id="portfolio">
+  <div class="section-header">
+    <div class="section-eyebrow"><div class="squares"><div class="sq sq1"></div><div class="sq sq2"></div><div class="sq sq3"></div></div>Portfolio 2026</div>
+    <div class="section-title">Proyectos que definen<br>estándares</div>
+    <div class="section-sub">Residencial · Comercial · Industrial. Cada obra es una declaración de principios donde la innovación se encuentra con la tradición.</div>
+  </div>
+  <div class="portfolio-filters">
+    <button class="pf-btn active" onclick="filterPf(this,'todos')">Todos</button>
+    <button class="pf-btn" onclick="filterPf(this,'residencial')">Residencial</button>
+    <button class="pf-btn" onclick="filterPf(this,'comercial')">Comercial</button>
+    <button class="pf-btn" onclick="filterPf(this,'industrial')">Industrial</button>
+    <button class="pf-btn" onclick="filterPf(this,'remodelacion')">Remodelación</button>
+  </div>
+  <div class="portfolio-grid" id="pf-grid">
+    <div class="pj-card" data-cat="residencial">
+      <div class="pj-img"><div style="width:100%;height:100%;background:linear-gradient(135deg,#2d3a4a,#4a6080);display:flex;align-items:center;justify-content:center"><span style="font-family:'Cormorant Garamond',serif;font-size:2rem;color:rgba(255,255,255,.15);font-style:italic">Punta del Este</span></div></div>
+      <div class="pj-body"><div class="pj-tag">Residencial · 2023</div><div class="pj-name">Punta del Este</div><div class="pj-meta">353m² · Rincón del Indio, Uruguay</div></div>
+      <div class="pj-overlay"><span class="pj-overlay-text">Ver proyecto</span></div>
+    </div>
+    <div class="pj-card" data-cat="residencial">
+      <div class="pj-img"><div style="width:100%;height:100%;background:linear-gradient(135deg,#3a4a35,#5a7050);display:flex;align-items:center;justify-content:center"><span style="font-family:'Cormorant Garamond',serif;font-size:2rem;color:rgba(255,255,255,.15);font-style:italic">Naudir 309</span></div></div>
+      <div class="pj-body"><div class="pj-tag">Residencial · 2022</div><div class="pj-name">Naudir 309</div><div class="pj-meta">205m² · Barrio El Naudir, Escobar</div></div>
+      <div class="pj-overlay"><span class="pj-overlay-text">Ver proyecto</span></div>
+    </div>
+    <div class="pj-card" data-cat="residencial">
+      <div class="pj-img"><div style="width:100%;height:100%;background:linear-gradient(135deg,#2a2a25,#4a4535);display:flex;align-items:center;justify-content:center"><span style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:rgba(255,255,255,.15);font-style:italic">Casa Maschwitz</span></div></div>
+      <div class="pj-body"><div class="pj-tag">Residencial · 2023</div><div class="pj-name">Casa Maschwitz</div><div class="pj-meta">302m² · Ing. Maschwitz, Escobar</div></div>
+      <div class="pj-overlay"><span class="pj-overlay-text">Ver proyecto</span></div>
+    </div>
+    <div class="pj-card" data-cat="residencial">
+      <div class="pj-img"><div style="width:100%;height:100%;background:linear-gradient(135deg,#3a3530,#6a5f50);display:flex;align-items:center;justify-content:center"><span style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:rgba(255,255,255,.15);font-style:italic">Casa Talar</span></div></div>
+      <div class="pj-body"><div class="pj-tag">Residencial · 2025–26</div><div class="pj-name">Casa Talar</div><div class="pj-meta">493m² · El Talar, Tigre</div></div>
+      <div class="pj-overlay"><span class="pj-overlay-text">Ver proyecto</span></div>
+    </div>
+    <div class="pj-card" data-cat="comercial">
+      <div class="pj-img"><div style="width:100%;height:100%;background:linear-gradient(135deg,#252530,#3a3a55);display:flex;align-items:center;justify-content:center"><span style="font-family:'Cormorant Garamond',serif;font-size:2rem;color:rgba(255,255,255,.15);font-style:italic">Bowen</span></div></div>
+      <div class="pj-body"><div class="pj-tag">Comercial · 2024–25</div><div class="pj-name">Bowen</div><div class="pj-meta">Distrito Arcos · Unicenter · Palmas del Pilar</div></div>
+      <div class="pj-overlay"><span class="pj-overlay-text">Ver proyecto</span></div>
+    </div>
+    <div class="pj-card" data-cat="industrial">
+      <div class="pj-img"><div style="width:100%;height:100%;background:linear-gradient(135deg,#252830,#304050);display:flex;align-items:center;justify-content:center"><span style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:rgba(255,255,255,.15);font-style:italic">Mi Container</span></div></div>
+      <div class="pj-body"><div class="pj-tag">Industrial · 2024–26</div><div class="pj-name">Mi Container</div><div class="pj-meta">2.388m² · Benavidez, Tigre</div></div>
+      <div class="pj-overlay"><span class="pj-overlay-text">Ver proyecto</span></div>
+    </div>
+    <div class="pj-card" data-cat="remodelacion">
+      <div class="pj-img"><div style="width:100%;height:100%;background:linear-gradient(135deg,#303540,#505a70);display:flex;align-items:center;justify-content:center"><span style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:rgba(255,255,255,.15);font-style:italic">Casa Miguens</span></div></div>
+      <div class="pj-body"><div class="pj-tag">Remodelación · 2020</div><div class="pj-name">Casa Miguens</div><div class="pj-meta">498m² · Punta Chica, Victoria</div></div>
+      <div class="pj-overlay"><span class="pj-overlay-text">Ver proyecto</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESO -->
+<section class="proceso-section" id="proceso">
+  <div class="section-header">
+    <div class="section-eyebrow" style="color:var(--blue1)"><div class="squares"><div class="sq sq1"></div><div class="sq sq2"></div><div class="sq sq3"></div></div>Cómo trabajamos</div>
+    <div class="section-title">Nuestro proceso</div>
+    <div class="section-sub" style="color:rgba(255,255,255,.45)">"Cada proyecto es único, pero nuestro método garantiza resultados consistentes. Nos ocupamos de que todo se resuelva de forma ordenada, eficiente y sin sorpresas."</div>
+  </div>
+  <div class="proceso-steps">
+    <div class="ps-card">
+      <div class="ps-num">01</div>
+      <div class="ps-title">Consulta inicial</div>
+      <div class="ps-desc">Reunión sin compromiso. Análisis del terreno y definición de alcances del proyecto.</div>
+      <span class="ps-time">Sin costo</span>
+    </div>
+    <div class="ps-card">
+      <div class="ps-num">02</div>
+      <div class="ps-title">Anteproyecto</div>
+      <div class="ps-desc">Propuesta arquitectónica con plantas, cortes y vistas 3D. Primeras definiciones de materiales.</div>
+      <span class="ps-time">3–4 semanas</span>
+    </div>
+    <div class="ps-card">
+      <div class="ps-num">03</div>
+      <div class="ps-title">Proyecto ejecutivo</div>
+      <div class="ps-desc">Documentación técnica completa, planos constructivos y presupuesto definitivo.</div>
+      <span class="ps-time">4–6 semanas</span>
+    </div>
+    <div class="ps-card">
+      <div class="ps-num">04</div>
+      <div class="ps-title">Construcción</div>
+      <div class="ps-desc">Dirección técnica y ejecución con seguimiento continuo. Entrega llave en mano.</div>
+      <span class="ps-time">Garantía 2 años</span>
+    </div>
+  </div>
+</section>
+
+
+<!-- MÉTRICAS + PROCESO EXPANDIDO -->
+<section style="background:var(--white);padding:5rem 2.5rem" id="metodologia">
+
+  <div style="text-align:center;margin-bottom:4rem">
+    <div class="section-eyebrow" style="justify-content:center"><div class="squares"><div class="sq sq1"></div><div class="sq sq2"></div><div class="sq sq3"></div></div>PMD en números</div>
+    <div class="section-title">Resultados que hablan</div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);margin-bottom:5rem">
+    <div style="background:var(--white);padding:2.5rem 2rem;text-align:center">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:3.2rem;font-weight:500;color:var(--blue2);line-height:1">+50</div>
+      <div style="font-size:13px;color:var(--ink2);margin-top:.5rem;font-weight:500">Obras entregadas</div>
+      <div style="font-size:11px;color:var(--ink3);margin-top:3px">GBA Norte · 2014–2026</div>
+    </div>
+    <div style="background:var(--white);padding:2.5rem 2rem;text-align:center">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:3.2rem;font-weight:500;color:var(--blue2);line-height:1">+15k</div>
+      <div style="font-size:13px;color:var(--ink2);margin-top:.5rem;font-weight:500">M² construidos</div>
+      <div style="font-size:11px;color:var(--ink3);margin-top:3px">Residencial · Comercial · Industrial</div>
+    </div>
+    <div style="background:var(--white);padding:2.5rem 2rem;text-align:center">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:3.2rem;font-weight:500;color:var(--blue2);line-height:1">10</div>
+      <div style="font-size:13px;color:var(--ink2);margin-top:.5rem;font-weight:500">Años en la zona</div>
+      <div style="font-size:11px;color:var(--ink3);margin-top:3px">Nordelta · Tigre · San Isidro</div>
+    </div>
+    <div style="background:var(--white);padding:2.5rem 2rem;text-align:center">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:3.2rem;font-weight:500;color:var(--blue2);line-height:1">2 años</div>
+      <div style="font-size:13px;color:var(--ink2);margin-top:.5rem;font-weight:500">Garantía de obra</div>
+      <div style="font-size:11px;color:var(--ink3);margin-top:3px">En todos los proyectos</div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start">
+    <div>
+      <div class="section-eyebrow"><div class="squares"><div class="sq sq1"></div><div class="sq sq2"></div><div class="sq sq3"></div></div>Así trabajamos</div>
+      <div class="section-title">Sin sorpresas, de principio a fin</div>
+      <div class="section-sub">El cliente sabe en todo momento qué se está haciendo, cuánto cuesta y cuándo estará listo.</div>
+      <div style="margin-top:2rem;display:flex;flex-direction:column">
+        <div style="display:flex;gap:1.2rem;padding:1.2rem 0;border-bottom:1px solid var(--border2)">
+          <div style="flex-shrink:0;width:30px;height:30px;background:var(--blue2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:#fff;margin-top:2px">1</div>
+          <div><div style="font-size:14px;font-weight:500;color:var(--ink);margin-bottom:3px">Consulta inicial gratuita</div><div style="font-size:13px;color:var(--ink2);line-height:1.6">Reunión en tu terreno o por video. Analizamos el proyecto, presupuesto y tiempos. Sin compromiso.</div></div>
+        </div>
+        <div style="display:flex;gap:1.2rem;padding:1.2rem 0;border-bottom:1px solid var(--border2)">
+          <div style="flex-shrink:0;width:30px;height:30px;background:var(--blue2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:#fff;margin-top:2px">2</div>
+          <div><div style="font-size:14px;font-weight:500;color:var(--ink);margin-bottom:3px">Anteproyecto con renders 3D</div><div style="font-size:13px;color:var(--ink2);line-height:1.6">Plantas, cortes y visualizaciones para que veas tu casa antes de construirla. 3–4 semanas.</div></div>
+        </div>
+        <div style="display:flex;gap:1.2rem;padding:1.2rem 0;border-bottom:1px solid var(--border2)">
+          <div style="flex-shrink:0;width:30px;height:30px;background:var(--blue2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:#fff;margin-top:2px">3</div>
+          <div><div style="font-size:14px;font-weight:500;color:var(--ink);margin-bottom:3px">Proyecto ejecutivo y presupuesto cerrado</div><div style="font-size:13px;color:var(--ink2);line-height:1.6">Documentación técnica completa. Lo que se acuerda es lo que se paga. 4–6 semanas.</div></div>
+        </div>
+        <div style="display:flex;gap:1.2rem;padding:1.2rem 0;border-bottom:1px solid var(--border2)">
+          <div style="flex-shrink:0;width:30px;height:30px;background:var(--blue2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:#fff;margin-top:2px">4</div>
+          <div><div style="font-size:14px;font-weight:500;color:var(--ink);margin-bottom:3px">Construcción con reportes semanales</div><div style="font-size:13px;color:var(--ink2);line-height:1.6">Fotos y avance de obra cada semana. Acceso a pmdsystem para seguimiento en tiempo real.</div></div>
+        </div>
+        <div style="display:flex;gap:1.2rem;padding:1.2rem 0">
+          <div style="flex-shrink:0;width:30px;height:30px;background:var(--blue3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:#fff;margin-top:2px">5</div>
+          <div><div style="font-size:14px;font-weight:500;color:var(--ink);margin-bottom:3px">Entrega llave en mano</div><div style="font-size:13px;color:var(--ink2);line-height:1.6">Recorrido final con checklist, documentación completa y garantía de 2 años.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:1rem">
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem">
+        <div style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--blue2);margin-bottom:1rem">Por qué llave en mano</div>
+        <div style="display:flex;flex-direction:column;gap:.8rem">
+          <div style="display:flex;gap:.8rem;font-size:13px;color:var(--ink2);align-items:flex-start"><div style="width:5px;height:5px;background:var(--blue2);border-radius:50%;margin-top:6px;flex-shrink:0"></div>Un solo interlocutor — no coordinás proveedores ni materiales</div>
+          <div style="display:flex;gap:.8rem;font-size:13px;color:var(--ink2);align-items:flex-start"><div style="width:5px;height:5px;background:var(--blue2);border-radius:50%;margin-top:6px;flex-shrink:0"></div>Compra directa de materiales a precios de obra sin intermediario</div>
+          <div style="display:flex;gap:.8rem;font-size:13px;color:var(--ink2);align-items:flex-start"><div style="width:5px;height:5px;background:var(--blue2);border-radius:50%;margin-top:6px;flex-shrink:0"></div>Gestión de permisos municipales y visados técnicos incluida</div>
+          <div style="display:flex;gap:.8rem;font-size:13px;color:var(--ink2);align-items:flex-start"><div style="width:5px;height:5px;background:var(--blue2);border-radius:50%;margin-top:6px;flex-shrink:0"></div>Garantía de 2 años sobre estructura y terminaciones</div>
+        </div>
+      </div>
+      <div style="background:var(--ink);border-radius:var(--r);padding:1.8rem">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-style:italic;color:rgba(255,255,255,.85);line-height:1.6;margin-bottom:1.2rem">"Nos ocupamos de que cada proyecto se resuelva de forma ordenada, eficiente y sin sorpresas."</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.3);margin-bottom:1.2rem">PMD Arquitectura · Benavidez, Tigre</div>
+        <button onclick="document.getElementById('contacto').scrollIntoView({behavior:'smooth'})" style="height:40px;padding:0 20px;background:var(--blue2);color:#fff;border:none;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:background .15s" onmouseover="this.style.background='#2B4E7A'" onmouseout="this.style.background='#3B6EA5'">Consultá sin compromiso →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRESUPUESTADOR -->
+<section class="presup-section" id="presupuestador">
+  <div class="section-header" style="text-align:center;margin-bottom:2.5rem">
+    <div class="section-eyebrow" style="justify-content:center"><div class="squares"><div class="sq sq1"></div><div class="sq sq2"></div><div class="sq sq3"></div></div>Herramienta gratuita</div>
+    <div class="section-title">¿Cuánto cuesta tu casa?</div>
+    <div class="section-sub" style="margin:0 auto;max-width:520px">Calculá el costo estimado en 2 minutos. Costos reales verificados en obras PMD de GBA Norte.</div>
+  </div>
+  <div class="cotiz-wrap" id="cotiz-wrap">
+    <div class="cotiz-prog" id="cotiz-prog" style="display:none"><div class="cotiz-pr" id="cpr1"></div><div class="cotiz-pr" id="cpr2"></div><div class="cotiz-pr" id="cpr3"></div><div class="cotiz-pr" id="cpr4"></div></div>
+    <div class="cotiz-mode-badge" id="cotiz-mode-badge" onclick="cResetMode()"></div>
+
+    <div class="cotiz-panel on" id="cp0">
+      <div class="c-eyebrow">Antes de empezar</div>
+      <h3 class="c-title">¿Cómo preferís cotizar?</h3>
+      <p class="c-sub">El resultado es el mismo — solo cambia cómo llegamos.</p>
+      <div class="cotiz-mode-grid">
+        <div class="cotiz-mode-card" onclick="cSetMode('pro')">
+          <div class="cmc-icon">⚡</div>
+          <div class="cmc-title">Rápido y técnico</div>
+          <div class="cmc-desc">Sé lo que quiero. SF, m², nivel, aberturas. Sin explicaciones.</div>
+          <span class="cmc-badge badge-pro">Para el que ya sabe</span>
+        </div>
+        <div class="cotiz-mode-card" onclick="cSetMode('guiado')">
+          <div class="cmc-icon">🏠</div>
+          <div class="cmc-title">Me guían paso a paso</div>
+          <div class="cmc-desc">Primera casa o no sé de construcción. Quiero entender qué elijo.</div>
+          <span class="cmc-badge badge-guiado">Con explicaciones</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="cotiz-panel" id="cp1">
+      <div class="c-eyebrow" id="cp1-eyebrow">Paso 1 · Superficie</div>
+      <h3 class="c-title" id="cp1-title">¿Cuántos m²?</h3>
+      <p class="c-sub" id="cp1-sub"></p>
+      <div class="c-m2-wrap">
+        <label class="c-label" id="cp1-label">Metros cuadrados cubiertos</label>
+        <div class="c-m2-row">
+          <input type="number" class="c-m2-in" id="c-m2" placeholder="150" min="40" max="800">
+          <span class="c-m2-unit">m²</span>
+        </div>
+        <div class="c-chips">
+          <button class="c-chip" onclick="cSetM2(80)">80</button>
+          <button class="c-chip" onclick="cSetM2(120)">120</button>
+          <button class="c-chip" onclick="cSetM2(160)">160</button>
+          <button class="c-chip" onclick="cSetM2(200)">200</button>
+          <button class="c-chip" onclick="cSetM2(260)">260</button>
+          <button class="c-chip" onclick="cSetM2(350)">350</button>
+        </div>
+        <div class="c-hint" id="cp1-hint"></div>
+      </div>
+      <button class="c-btn c-btn-main" onclick="cGoP2()">Siguiente →</button>
+      <button class="c-btn c-btn-ghost" onclick="cGo(0)">← Atrás</button>
+    </div>
+
+    <div class="cotiz-panel" id="cp2">
+      <div class="c-eyebrow" id="cp2-eyebrow">Paso 2 · Terminaciones</div>
+      <h3 class="c-title" id="cp2-title">¿Qué nivel de terminación?</h3>
+      <p class="c-sub" id="cp2-sub"></p>
+      <div class="c-opts" id="c-nivel-opts"></div>
+      <button class="c-btn c-btn-main" onclick="cGoP3()">Siguiente →</button>
+      <button class="c-btn c-btn-ghost" onclick="cGo(1)">← Atrás</button>
+    </div>
+
+    <div class="cotiz-panel" id="cp3">
+      <div class="c-eyebrow" id="cp3-eyebrow">Paso 3 · Extras</div>
+      <h3 class="c-title" id="cp3-title">¿Sumamos algo más?</h3>
+      <p class="c-sub" id="cp3-sub"></p>
+      <div class="c-extra-row" id="cx-plantas" onclick="cToggleExtra('plantas')"><div class="cer-left"><span class="cer-label" id="cx-plantas-label">Dos plantas</span><span class="cer-desc" id="cx-plantas-desc">+8% sobre el total</span></div><div class="cer-toggle"></div></div>
+      <div class="c-extra-row" id="cx-pileta" onclick="cToggleExtra('pileta')"><div class="cer-left"><span class="cer-label" id="cx-pileta-label">Pileta</span><span class="cer-desc" id="cx-pileta-desc">USD 13.265 fijo</span></div><div class="cer-toggle"></div></div>
+      <div class="c-extra-row" id="cx-garage" onclick="cToggleExtra('garage')"><div class="cer-left"><span class="cer-label" id="cx-garage-label">Garage cubierto</span><span class="cer-desc" id="cx-garage-desc">USD 8.000 fijo</span></div><div class="cer-toggle"></div></div>
+      <button class="c-btn c-btn-main" onclick="cGoResult()">Ver mi presupuesto →</button>
+      <button class="c-btn c-btn-ghost" onclick="cGo(2)">← Atrás</button>
+    </div>
+
+    <div class="cotiz-panel" id="cp4">
+      <div class="c-eyebrow">Tu estimación</div>
+      <div class="c-summary-chips" id="c-summary-chips"></div>
+      <div class="c-result-hero">
+        <div class="c-result-label">Inversión estimada — sin terreno</div>
+        <div class="c-result-num" id="c-result-num">–</div>
+        <div class="c-result-ars" id="c-result-ars">–</div>
+      </div>
+      <div class="c-result-grid" id="c-result-grid"></div>
+      <div class="c-result-note" id="c-result-note"></div>
+      <div class="c-lead-sep">
+        <p class="c-lead-intro" id="c-lead-intro">Mandanos tu WhatsApp y te enviamos el desglose completo. Te contactamos sin compromiso.</p>
+        <div class="c-field-row">
+          <div class="c-field"><label>Nombre</label><input type="text" id="c-nombre" placeholder="Tu nombre"></div>
+          <div class="c-field"><label>WhatsApp</label><input type="tel" id="c-tel" placeholder="+54 9 11..."></div>
+        </div>
+        <div class="c-field" style="margin-bottom:.8rem">
+          <label>¿En qué etapa estás?</label>
+          <select id="c-etapa">
+            <option value="">Seleccioná</option>
+            <option>Tengo terreno y quiero arrancar</option>
+            <option>Estoy buscando terreno</option>
+            <option>Solo quiero saber el costo</option>
+            <option>Ya tengo proyecto, busco constructor</option>
+          </select>
+        </div>
+        <button class="c-btn c-btn-main" onclick="cEnviar()">Recibir desglose completo →</button>
+        <button class="c-btn c-btn-ghost" onclick="cGo(3)">← Cambiar datos</button>
+      </div>
+    </div>
+
+    <div class="cotiz-panel" id="cp5">
+      <div class="c-success-icon"></div>
+      <h3 class="c-title" style="font-size:1.5rem;text-align:center;margin-bottom:.5rem">¡Listo!</h3>
+      <p class="c-sub" style="text-align:center">Te contactamos en las próximas horas con el desglose completo.</p>
+      <a id="c-wa-final" href="#" target="_blank"><button class="c-btn-wa">Hablar por WhatsApp ahora</button></a>
+    </div>
+  </div>
+</section>
+
+<!-- ZONAS -->
+<section class="zonas-section" id="zonas">
+  <div class="section-eyebrow" style="color:var(--blue1)"><div class="squares"><div class="sq sq1"></div><div class="sq sq2"></div><div class="sq sq3"></div></div>Cobertura</div>
+  <div class="section-title" style="color:#fff">Zona de trabajo</div>
+  <div class="zonas-grid">
+    <div class="zona-card"><div class="zona-name">Nordelta · Tigre</div><div class="zona-subs">Delta del Tigre · Benavidez · El Talar · Barrios náuticos</div><span class="zona-tag">Principal</span></div>
+    <div class="zona-card"><div class="zona-name">Escobar · El Naudir</div><div class="zona-subs">Ing. Maschwitz · Garín · Belén de Escobar · Barrios privados</div><span class="zona-tag">Principal</span></div>
+    <div class="zona-card"><div class="zona-name">San Isidro · San Fernando</div><div class="zona-subs">Acassuso · Beccar · Victoria · Punta Chica</div><span class="zona-tag">Activo</span></div>
+    <div class="zona-card"><div class="zona-name">Pilar · Zona Norte</div><div class="zona-subs">Palmas del Pilar · Del Viso · Countries y barrios cerrados</div><span class="zona-tag">Activo</span></div>
+  </div>
+</section>
+
+<!-- CONTACTO -->
+<section class="contacto-section" id="contacto">
+  <div class="contacto-inner">
+    <div>
+      <div class="section-eyebrow"><div class="squares"><div class="sq sq1"></div><div class="sq sq2"></div><div class="sq sq3"></div></div>Contacto</div>
+      <div class="section-title">Comenzá tu proyecto hoy</div>
+      <div class="section-sub">Primera consulta gratuita. Analizamos tu terreno y definimos alcances sin compromiso.</div>
+      <div class="contact-info">
+        <div class="ci-item"><span class="ci-label">Ubicación</span><span class="ci-val">Benavidez, Tigre, Buenos Aires</span></div>
+        <div class="ci-item"><span class="ci-label">WhatsApp</span><span class="ci-val">+54 9 11 3519-2030</span></div>
+        <div class="ci-item"><span class="ci-label">Email</span><span class="ci-val"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="21484f474e61514c454053505448554442555453400f424e4c">[email&#160;protected]</a></span><span class="ci-sub">Respuesta en 24hs</span></div>
+        <div class="ci-item"><span class="ci-label">Horario</span><span class="ci-val">Lunes a viernes · 8:00 a 17:00hs</span></div>
+      </div>
+    </div>
+    <div class="contact-form">
+      <div class="cf-title">Contanos tu proyecto</div>
+      <div class="cf-field"><label>Nombre y apellido</label><input type="text" placeholder="Tu nombre completo"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+        <div class="cf-field"><label>WhatsApp</label><input type="tel" placeholder="+54 9 11..."></div>
+        <div class="cf-field"><label>Email</label><input type="email" placeholder="tu@email.com"></div>
+      </div>
+      <div class="cf-field"><label>Tipo de proyecto</label>
+        <select><option>Obra nueva — casa</option><option>Remodelación / ampliación</option><option>Local comercial</option><option>Otro</option></select>
+      </div>
+      <div class="cf-field"><label>Zona del terreno</label>
+        <select><option>Nordelta / Tigre</option><option>San Isidro / Acassuso</option><option>Escobar / Maschwitz</option><option>Pilar / Zona Norte</option><option>Otra zona GBA</option></select>
+      </div>
+      <div class="cf-field"><label>Contanos más (opcional)</label><textarea placeholder="M² aproximados, terreno propio, etapa del proyecto..."></textarea></div>
+      <button class="cf-submit" onclick="this.textContent='Enviado ✓';this.style.background='#3B6EA5'">Enviar consulta</button>
+      <a href="https://wa.me/5491135192030?text=Hola!%20Quiero%20consultar%20sobre%20un%20proyecto%20de%20construcción" target="_blank"><button class="cf-wa">También podés escribirnos por WhatsApp</button></a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="squares"><div class="sq sq1"></div><div class="sq sq2"></div><div class="sq sq3"></div></div>
+        <span style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:rgba(255,255,255,.7);letter-spacing:.04em">PMD Arquitectura</span>
+      </div>
+    </div>
+    <div class="footer-links">
+      <a href="#portfolio">Proyectos</a>
+      <a href="#proceso">Proceso</a>
+      <a href="#presupuestador">Cotizador</a>
+      <a href="#contacto">Contacto</a>
+      <a href="https://instagram.com/pmd_arquitectura" target="_blank">Instagram</a>
+    </div>
+    <div class="footer-copy">© 2026 PMD Arquitectura SRL · Benavidez, Tigre · GBA Norte</div>
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+function filterPf(btn, cat){
+  document.querySelectorAll('.pf-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.pj-card').forEach(c=>{
+    c.style.display=(cat==='todos'||c.dataset.cat===cat)?'block':'none';
+  });
+}
+
+// ── COTIZADOR DOBLE MODO ──────────────────────────────────────────
+const cTC=1425;
+const cBase={
+  pro:{
+    basica:    {label:'Básica',              price:'USD 410/m²',    desc:'Cerámicos, aluminio simple, cocina práctica.',               detail:'SF: mat 200 + MO 160 + GG 10'},
+    media_alta:{label:'Media-alta',          price:'USD 600/m²',    desc:'DVH negro, porcelanato, caldera gas.',                       detail:'Verificado Naudir 308 · 190m² · mar-2026'},
+    alta:      {label:'Alta gama',           price:'USD 800/m²',    desc:'RPT importado, domótica básica, cocina de diseño.',          detail:'Mat 530 + MO 240 + GG 12'},
+    premium:   {label:'Premium',             price:'USD 1.100/m²',  desc:'Schüco, KNX, spa, cocina importada.',                       detail:'Mat 800 + MO 280 + GG 15'},
+  },
+  guiado:{
+    basica:    {label:'Funcional y prolija',  price:'desde USD 410/m²',  desc:'Piso cerámico, ventanas estándar, cocina práctica. Todo bien resuelto, sin lujos.',                   detail:null},
+    media_alta:{label:'Con onda y cómoda',    price:'desde USD 600/m²',  desc:'DVH negro, porcelanato, cocina con isla. El estándar de los barrios privados de GBA Norte.',          detail:'Verificado en obra real PMD — lo que ves es lo que pagás.'},
+    alta:      {label:'Premium, sin detalles',price:'desde USD 800/m²',  desc:'Aberturas importadas, domótica, materiales de diseño. Cada ambiente pensado.',                       detail:null},
+    premium:   {label:'Lo mejor de lo mejor', price:'desde USD 1.100/m²',desc:'Sin límites: cocina importada, spa, materiales seleccionados uno a uno.',                            detail:null},
+  }
+};
+const cContent={
+  pro:{
+    p1:{eyebrow:'Paso 1 de 3 · Superficie',title:'Superficie cubierta (m²)',sub:'',label:'M² cubiertos',hint:''},
+    p2:{eyebrow:'Paso 2 de 3 · Nivel',title:'Nivel de terminación',sub:'Steel framing · Costos verificados.'},
+    p3:{eyebrow:'Paso 3 de 3 · Adicionales',title:'Adicionales',sub:'',
+        plantas:{label:'2 plantas',desc:'+8% sobre el total'},
+        pileta:{label:'Pileta',desc:'USD 13.265 fijo · MO César Rolón'},
+        garage:{label:'Garage cubierto',desc:'USD 8.000 fijo'}},
+    lead:'Mandanos tu WA y coordinamos reunión.',
+  },
+  guiado:{
+    p1:{eyebrow:'Paso 1 de 3',title:'¿Cuántos metros necesitás?',sub:'Para una casa de 3-4 personas lo habitual es 120-200m². Si no sabés exactamente, usá un número redondo.',label:'Metros cuadrados cubiertos',hint:'¿No sabés cuántos m²? No importa, podemos ajustarlo después.'},
+    p2:{eyebrow:'Paso 2 de 3',title:'¿Cómo imaginás tu casa?',sub:'Sin términos técnicos — elegí la descripción que más se parezca a lo que tenés en mente.'},
+    p3:{eyebrow:'Paso 3 de 3',title:'¿Querés agregar algo más?',sub:'Son opcionales. Si no sabés, los podés agregar después.',
+        plantas:{label:'Quiero dos pisos',desc:'Una planta encima de la otra. Cuesta un poco más por la escalera y el entrepiso.'},
+        pileta:{label:'Con pileta',desc:'La construimos nosotros. USD 13.265 independientemente del tamaño de la casa.'},
+        garage:{label:'Garage techado',desc:'Un espacio cubierto para el auto, conectado o separado de la casa.'}},
+    lead:'Dejanos tu WhatsApp y te mandamos el desglose. Te llamamos para explicarte todo en persona, sin presión.',
+  }
+};
+const cNotas={
+  basica:'Estructura steel framing, materiales de primera calidad, terminaciones prácticas y durables.',
+  media_alta:'Verificado en obra real PMD — Naudir 308, 190m², 2026. Aberturas DVH negro + mosquitero. Lo que ves es lo que se ejecutó.',
+  alta:'Aberturas RPT importadas, domótica básica, materiales de diseño. Eficiencia energética superior.',
+  premium:'Sin límite de calidad. Cada material elegido con el cliente. Garantía de 2 años.',
+};
+const cPrecioBase={basica:410,media_alta:600,alta:800,premium:1100};
+const cMO={basica:160,media_alta:209,alta:240,premium:280};
+let cMode=null;
+let cEstado={m2:0,nivel:'media_alta',plantas:false,pileta:false,garage:false};
+
+function cGo(n){
+  [0,1,2,3,4,5].forEach(i=>{const p=document.getElementById('cp'+i);if(p)p.classList.toggle('on',i===n);});
+  if(cMode){
+    const prs=document.querySelectorAll('.cotiz-pr');
+    prs.forEach((p,i)=>{p.style.background=i+1<n?'var(--blue2)':i+1===n?'var(--blue1)':'var(--border)';});
+  }
+  const sec=document.getElementById('presupuestador');
+  if(sec) window.scrollTo({top:sec.offsetTop-80,behavior:'smooth'});
+}
+
+function cSetMode(m){
+  cMode=m;
+  const badge=document.getElementById('cotiz-mode-badge');
+  badge.textContent=m==='pro'?'⚡ Modo técnico — cambiar':'🏠 Modo guiado — cambiar';
+  badge.style.display='flex';
+  document.getElementById('cotiz-prog').style.display='flex';
+  const c=cContent[m];
+  document.getElementById('cp1-eyebrow').textContent=c.p1.eyebrow;
+  document.getElementById('cp1-title').textContent=c.p1.title;
+  document.getElementById('cp1-sub').textContent=c.p1.sub;
+  document.getElementById('cp1-label').textContent=c.p1.label;
+  document.getElementById('cp1-hint').textContent=c.p1.hint;
+  document.getElementById('cp2-eyebrow').textContent=c.p2.eyebrow;
+  document.getElementById('cp2-title').textContent=c.p2.title;
+  document.getElementById('cp2-sub').textContent=c.p2.sub;
+  cRenderNiveles();
+  document.getElementById('cp3-eyebrow').textContent=c.p3.eyebrow;
+  document.getElementById('cp3-title').textContent=c.p3.title;
+  document.getElementById('cp3-sub').textContent=c.p3.sub||'';
+  document.getElementById('cx-plantas-label').textContent=c.p3.plantas.label;
+  document.getElementById('cx-plantas-desc').textContent=c.p3.plantas.desc;
+  document.getElementById('cx-pileta-label').textContent=c.p3.pileta.label;
+  document.getElementById('cx-pileta-desc').textContent=c.p3.pileta.desc;
+  document.getElementById('cx-garage-label').textContent=c.p3.garage.label;
+  document.getElementById('cx-garage-desc').textContent=c.p3.garage.desc;
+  document.getElementById('c-lead-intro').textContent=c.lead;
+  cGo(1);
+}
+
+function cResetMode(){
+  cMode=null;
+  document.getElementById('cotiz-mode-badge').style.display='none';
+  document.getElementById('cotiz-prog').style.display='none';
+  cGo(0);
+}
+
+function cRenderNiveles(){
+  if(!cMode)return;
+  const container=document.getElementById('c-nivel-opts');
+  container.innerHTML=Object.entries(cBase[cMode]).map(([id,n])=>`
+    <div class="c-opt${id===cEstado.nivel?' c-sel':''}" onclick="cSelNivel(this,'${id}')">
+      <div class="c-opt-body">
+        <div class="c-opt-header"><span class="c-opt-label">${n.label}</span><span class="c-opt-price">${n.price}</span></div>
+        <div class="c-opt-desc">${n.desc}</div>
+        ${n.detail?`<div class="c-opt-detail${cMode==='pro'?' c-show':''}">${n.detail}</div>`:''}
+      </div>
+      <div class="c-opt-check${id===cEstado.nivel?' c-sel':''}"></div>
+    </div>`).join('');
+}
+
+function cSelNivel(el,id){
+  document.querySelectorAll('#c-nivel-opts .c-opt').forEach(o=>o.classList.remove('c-sel'));
+  document.querySelectorAll('#c-nivel-opts .c-opt-check').forEach(o=>o.classList.remove('c-sel'));
+  el.classList.add('c-sel');
+  el.querySelector('.c-opt-check').classList.add('c-sel');
+  cEstado.nivel=id;
+}
+
+function cSetM2(v){document.getElementById('c-m2').value=v;document.getElementById('c-m2').classList.remove('c-err');}
+function cGoP2(){
+  const v=parseInt(document.getElementById('c-m2').value);
+  if(!v||v<40||v>800){document.getElementById('c-m2').classList.add('c-err');document.getElementById('c-m2').focus();return;}
+  document.getElementById('c-m2').classList.remove('c-err');
+  cEstado.m2=v;cGo(2);
+}
+function cGoP3(){cGo(3);}
+function cToggleExtra(key){cEstado[key]=!cEstado[key];document.getElementById('cx-'+key).classList.toggle('c-sel',cEstado[key]);}
+function cGoResult(){cCalcular();cGo(4);}
+
+function cfmt(n){return Math.round(n).toLocaleString('es-AR');}
+
+function cCalcular(){
+  const {m2,nivel,plantas,pileta,garage}=cEstado;
+  let base=cPrecioBase[nivel]*m2;
+  if(plantas)base*=1.08;
+  if(pileta)base+=13265;
+  if(garage)base+=8000;
+  const low=Math.round(base*0.9),high=Math.round(base*1.1);
+  document.getElementById('c-result-num').textContent=`USD ${cfmt(low)} — ${cfmt(high)}`;
+  document.getElementById('c-result-ars').textContent=`ARS $${cfmt(low*cTC)} — $${cfmt(high*cTC)} · TC $${cfmt(cTC)}`;
+  const mo=Math.round(cMO[nivel]*m2);
+  const mat=Math.round((cPrecioBase[nivel]-cMO[nivel])*m2*0.8);
+  const adi=(pileta?13265:0)+(garage?8000:0);
+  const items=[
+    {label:'Por m²',val:`USD ${cfmt(cPrecioBase[nivel])}`},
+    {label:'Mano de obra',val:`USD ${cfmt(mo)}`},
+    {label:'Materiales',val:`USD ${cfmt(mat)}`},
+    adi>0?{label:'Adicionales',val:`USD ${cfmt(adi)}`}:null,
+    plantas?{label:'2 plantas',val:'+8%'}:null,
+    {label:'TC base',val:`$${cfmt(cTC)}`},
+  ].filter(Boolean);
+  document.getElementById('c-result-grid').innerHTML=items.map(i=>`<div class="crg-item"><div class="crg-label">${i.label}</div><div class="crg-val">${i.val}</div></div>`).join('');
+  document.getElementById('c-result-note').textContent=cNotas[nivel];
+  const nLabel=cBase[cMode||'guiado'][nivel].label;
+  const extras=[plantas&&'2 plantas',pileta&&'pileta',garage&&'garage'].filter(Boolean);
+  document.getElementById('c-summary-chips').innerHTML=
+    `<span class="c-chip-tag">${m2} m²</span><span class="c-chip-tag">${nLabel}</span>`+
+    extras.map(e=>`<span class="c-chip-tag">${e}</span>`).join('');
+}
+
+function cEnviar(){
+  const nombre=document.getElementById('c-nombre').value.trim();
+  const tel=document.getElementById('c-tel').value.trim();
+  if(!nombre){document.getElementById('c-nombre').classList.add('c-err');document.getElementById('c-nombre').focus();return;}
+  if(!tel){document.getElementById('c-tel').classList.add('c-err');document.getElementById('c-tel').focus();return;}
+  document.getElementById('c-nombre').classList.remove('c-err');
+  document.getElementById('c-tel').classList.remove('c-err');
+  const {m2,nivel,plantas,pileta,garage}=cEstado;
+  const base=cPrecioBase[nivel]*m2*(plantas?1.08:1)+(pileta?13265:0)+(garage?8000:0);
+  const nLabel=cBase[cMode||'guiado'][nivel].label;
+  const etapa=document.getElementById('c-etapa').value||'no especificó';
+  const extras=[plantas&&'2 plantas',pileta&&'pileta',garage&&'garage'].filter(Boolean).join(', ')||'ninguno';
+  // Script WhatsApp — mensaje personalizado con contexto completo del lead
+  const msg=encodeURIComponent(
+    `Hola PMD! Calculé mi proyecto en el cotizador:
+`+
+    `📐 ${m2}m² · ${nLabel}
+`+
+    `➕ Extras: ${extras}
+`+
+    `💰 USD ${cfmt(Math.round(base*0.9))}–${cfmt(Math
