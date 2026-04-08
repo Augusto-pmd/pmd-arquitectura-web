@@ -294,6 +294,162 @@ footer{background:var(--ink);padding:3rem 2.5rem;border-top:1px solid rgba(255,2
 .c-success-icon{width:52px;height:52px;background:var(--blue2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:22px;color:#fff}
 .c-success-icon::after{content:'✓';color:#fff;font-size:22px}
 
+
+/* ══ COTIZADOR INTEGRADO ══════════════════════════════════════════ */
+.presup-section{background:var(--bg2);padding:5rem 2.5rem}
+.cotiz-outer{max-width:680px;margin:0 auto;background:var(--white);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;position:relative}
+
+/* Mode selector */
+.cotiz-mode-sel{padding:2rem;display:none}.cotiz-mode-sel.on{display:block}
+.cotiz-mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-top:1rem}
+.cotiz-mc{border:1.5px solid var(--border);border-radius:var(--r);padding:1.2rem;cursor:pointer;transition:all .18s;background:var(--bg)}
+.cotiz-mc:hover{border-color:var(--blue2);background:var(--white)}
+.mc-icon{font-size:20px;margin-bottom:.5rem}
+.mc-title{font-size:14px;font-weight:500;color:var(--ink);margin-bottom:.3rem}
+.mc-desc{font-size:12px;color:var(--ink3);line-height:1.5}
+.mc-badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;margin-top:.5rem}
+.badge-g{background:#EAF3DE;color:#27500A}
+.badge-p{background:var(--bg2);color:var(--blue2)}
+
+/* Badge de modo activo */
+.mode-badge{display:none;position:absolute;top:1rem;right:1rem;z-index:10;align-items:center;gap:5px;background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:3px 10px;font-size:11px;color:var(--ink2);cursor:pointer}
+.mode-badge.on{display:flex}
+.mode-badge:hover{border-color:var(--blue2);color:var(--blue2)}
+
+/* Progress bar */
+.cotiz-prog{height:3px;display:none;gap:0}
+.cotiz-prog.on{display:flex}
+.c-pr{flex:1;background:var(--border);transition:background .3s}
+
+/* ─── MODO GUIADO (simple 3 pasos) ─── */
+.g-panel{padding:2rem;display:none;animation:fadeIn .2s ease}.g-panel.on{display:block}
+.c-eyebrow{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue2);margin-bottom:.5rem;display:flex;align-items:center;gap:8px}
+.c-eyebrow::before{content:'';width:16px;height:1px;background:var(--blue2)}
+.c-htitle{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:500;line-height:1.15;color:var(--ink);margin-bottom:.4rem}
+.c-sub{font-size:13px;color:var(--ink2);line-height:1.6;margin-bottom:1.4rem}
+.c-m2-row{display:flex;align-items:center;gap:.8rem;margin-bottom:.4rem}
+.c-m2-in{flex:1;height:52px;border:1.5px solid var(--border);border-radius:var(--r);background:var(--bg);font-family:'DM Sans',sans-serif;font-size:1.4rem;color:var(--ink);padding:0 1rem;outline:none;transition:border-color .15s;-webkit-appearance:none}
+.c-m2-in:focus{border-color:var(--blue2);background:var(--white)}
+.c-m2-in.cerr{border-color:#C0392B}
+.c-m2-unit{font-size:1.1rem;color:var(--ink3);font-weight:300}
+.c-chips{display:flex;gap:.4rem;margin-bottom:.3rem;flex-wrap:wrap}
+.c-chip{height:26px;padding:0 12px;border:1px solid var(--border);border-radius:20px;background:transparent;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--ink2);cursor:pointer;transition:all .15s}
+.c-chip:hover{background:var(--blue2);color:#fff;border-color:var(--blue2)}
+.c-hint{font-size:11px;color:var(--ink3);margin-bottom:1.2rem}
+.g-opts{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.4rem}
+.g-opt{border:1.5px solid var(--border);border-radius:var(--r);padding:12px 14px;cursor:pointer;transition:all .15s;background:var(--bg);display:flex;align-items:flex-start;gap:10px}
+.g-opt:hover,.g-opt.gsel{border-color:var(--blue2);background:var(--white)}
+.g-opt-body{flex:1}
+.g-opt-hdr{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:2px}
+.g-opt-label{font-size:13px;font-weight:500;color:var(--ink)}
+.g-opt-price{font-size:11px;color:var(--blue2);font-weight:500;white-space:nowrap}
+.g-opt-desc{font-size:11px;color:var(--ink3);line-height:1.5}
+.g-opt-detail{font-size:10px;color:var(--blue2);margin-top:3px;display:none}
+.g-check{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--border);flex-shrink:0;margin-top:2px;transition:all .15s}
+.g-opt.gsel .g-check{background:var(--blue2);border-color:var(--blue2);display:flex;align-items:center;justify-content:center}
+.g-opt.gsel .g-check::after{content:'';width:5px;height:5px;background:#fff;border-radius:50%}
+.g-extra{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border:1px solid var(--border);border-radius:var(--r);margin-bottom:.5rem;cursor:pointer;background:var(--bg);transition:all .15s}
+.g-extra:hover,.g-extra.gxon{border-color:var(--blue2);background:var(--white)}
+.ge-left{display:flex;flex-direction:column;gap:2px}
+.ge-label{font-size:13px;font-weight:500;color:var(--ink)}
+.ge-desc{font-size:11px;color:var(--ink3)}
+.ge-price{font-size:11px;color:var(--blue2);font-weight:500}
+.g-toggle{width:34px;height:18px;border-radius:9px;background:var(--border);position:relative;transition:background .2s;flex-shrink:0}
+.g-extra.gxon .g-toggle{background:var(--blue2)}
+.g-toggle::after{content:'';position:absolute;width:13px;height:13px;background:#fff;border-radius:50%;top:2.5px;left:2.5px;transition:transform .2s}
+.g-extra.gxon .g-toggle::after{transform:translateX(16px)}
+
+/* ─── MODO PRO (técnico por rubros) ─── */
+.p-panel{padding:2rem;display:none;animation:fadeIn .2s ease}.p-panel.on{display:block}
+.p-steps{display:flex;gap:0;margin-bottom:1.2rem;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;background:var(--bg2)}
+.p-step{flex:1;padding:8px 6px;display:flex;align-items:center;justify-content:center;gap:5px;font-size:11px;color:var(--ink3);border-right:1px solid var(--border);cursor:pointer;transition:all .15s;text-align:center}
+.p-step:last-child{border:none}
+.p-step.pact{background:var(--ink);color:#fff}
+.p-step.pdone{background:var(--bg2);color:var(--blue2)}
+.p-step-num{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;background:rgba(255,255,255,.15);flex-shrink:0}
+.p-step:not(.pact) .p-step-num{background:var(--bg);color:var(--ink3);border:1px solid var(--border)}
+.p-step.pdone .p-step-num{background:var(--blue2);color:#fff;border-color:var(--blue2)}
+.p-sec{background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:1.1rem;margin-bottom:.7rem}
+.p-sec-title{font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:.8rem;padding-bottom:6px;border-bottom:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between}
+.p-sec-usd{font-size:11px;font-weight:500;color:var(--blue2);letter-spacing:0}
+.p-fg{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.7rem;margin-bottom:.7rem}
+.p-field{display:flex;flex-direction:column;gap:4px}
+.p-field label{font-size:11px;font-weight:500;color:var(--ink2);text-transform:uppercase;letter-spacing:.06em}
+.p-field input,.p-field select{height:36px;padding:0 10px;border:1px solid var(--border);border-radius:var(--r);background:var(--white);font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink);outline:none;transition:all .15s;-webkit-appearance:none}
+.p-field input:focus,.p-field select:focus{border-color:var(--blue2)}
+.p-rg{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:7px}
+.p-rc{border:1.5px solid var(--border);border-radius:var(--r);padding:9px 11px;cursor:pointer;transition:all .15s;background:var(--white);position:relative}
+.p-rc:hover,.p-rc.psel{border-color:var(--blue2);background:var(--white)}
+.p-rc input{position:absolute;opacity:0;width:0;height:0}
+.p-rc-label{font-size:12px;font-weight:500;color:var(--ink);margin-bottom:2px}
+.p-rc-desc{font-size:10px;color:var(--ink3);line-height:1.4}
+.p-rc-price{font-size:10px;color:var(--blue2);margin-top:3px;font-weight:500}
+.p-rc-check{width:13px;height:13px;border-radius:50%;border:1.5px solid var(--border);position:absolute;top:9px;right:9px;transition:all .15s}
+.p-rc.psel .p-rc-check{background:var(--blue2);border-color:var(--blue2)}
+.p-rc.psel .p-rc-check::after{content:'';width:4px;height:4px;background:#fff;border-radius:50%;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}
+.p-toggle-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border2)}
+.p-toggle-row:last-child{border:none}
+.ptr-left{display:flex;flex-direction:column;gap:2px}
+.ptr-label{font-size:12px;font-weight:500;color:var(--ink)}
+.ptr-desc{font-size:10px;color:var(--ink3)}
+.ptr-price{font-size:10px;color:var(--blue2);font-weight:500}
+.p-tog{width:32px;height:17px;border-radius:9px;background:var(--border);position:relative;cursor:pointer;transition:background .2s;flex-shrink:0}
+.p-tog.on{background:var(--blue2)}
+.p-tog::after{content:'';position:absolute;width:12px;height:12px;background:#fff;border-radius:50%;top:2.5px;left:2.5px;transition:transform .2s}
+.p-tog.on::after{transform:translateX(15px)}
+.slider-wrap{display:flex;flex-direction:column;gap:3px}
+.slider-row{display:flex;align-items:center;gap:8px}
+.slider-row input[type=range]{flex:1;height:3px;-webkit-appearance:none;background:var(--border);border-radius:2px;outline:none}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--blue2);cursor:pointer;border:2px solid var(--white)}
+.slider-val{font-size:12px;font-weight:500;color:var(--ink);min-width:50px;text-align:right}
+
+/* ─── RESULTADO COMPARTIDO ─── */
+.r-panel{padding:2rem;display:none;animation:fadeIn .2s ease}.r-panel.on{display:block}
+.r-chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:1rem}
+.r-chip{background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:3px 10px;font-size:11px;color:var(--ink2)}
+.r-hero{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1.4rem;margin-bottom:.7rem}
+.r-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue2);margin-bottom:.3rem}
+.r-total-num{font-family:'Cormorant Garamond',serif;font-size:2.6rem;font-weight:500;color:var(--ink);line-height:1}
+.r-ars{font-size:11px;color:var(--ink3);margin-top:.2rem;margin-bottom:.8rem}
+.r-note{font-size:11px;color:var(--ink2);background:var(--bg);padding:8px 12px;border-radius:var(--r);border-left:3px solid var(--blue1);line-height:1.6}
+.desglose-wrap{border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:.7rem}
+.dl-header{background:var(--ink);padding:10px 14px;display:flex;align-items:center;justify-content:space-between}
+.dl-title{font-size:12px;font-weight:500;color:#fff}
+.dl-badge{font-size:10px;background:rgba(255,255,255,.15);color:rgba(255,255,255,.6);padding:2px 7px;border-radius:10px}
+.dl-locked{padding:1rem;display:flex;align-items:center;gap:10px;background:var(--bg)}
+.dl-lock-icon{width:30px;height:30px;background:var(--bg2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.dl-locked-text{font-size:12px;color:var(--ink2);line-height:1.5}
+.btn-unlock{margin-top:.5rem;height:36px;padding:0 16px;background:var(--blue2);color:#fff;border:none;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;display:block}
+.dl-rows{}
+.rr{display:flex;justify-content:space-between;align-items:center;padding:9px 14px;border-bottom:1px solid var(--border2);font-size:12px}
+.rr:last-child{border:none}
+.rr-label{color:var(--ink2)}
+.rr-right{text-align:right}
+.rr-val{font-weight:500;color:var(--ink)}
+.rr-pct{font-size:10px;color:var(--ink3)}
+.rr-bar{width:80px;height:3px;background:var(--border);border-radius:2px;margin-top:3px;margin-left:auto}
+.rr-fill{height:3px;border-radius:2px;background:var(--blue2)}
+.lead-form-inner{background:var(--ink);border-radius:var(--r);padding:1.3rem;margin-bottom:.7rem;display:none}
+.lfi-title{font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:#fff;margin-bottom:.3rem}
+.lfi-sub{font-size:12px;color:rgba(255,255,255,.45);margin-bottom:.8rem}
+.lf-row{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-bottom:.6rem}
+.lf-f{display:flex;flex-direction:column;gap:3px}
+.lf-f label{font-size:10px;font-weight:500;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.06em}
+.lf-f input,.lf-f select{height:38px;padding:0 10px;border:1px solid rgba(255,255,255,.15);border-radius:var(--r);background:rgba(255,255,255,.08);font-family:'DM Sans',sans-serif;font-size:13px;color:#fff;outline:none;-webkit-appearance:none;transition:border-color .15s}
+.lf-f input:focus,.lf-f select:focus{border-color:var(--blue1)}
+.lf-f input::placeholder{color:rgba(255,255,255,.3)}
+.lf-f select option{color:var(--ink);background:var(--white)}
+.lf-f input.lerr{border-color:#E24B4A}
+.btn-c{width:100%;height:44px;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;border:none;transition:all .15s;display:flex;align-items:center;justify-content:center}
+.btn-c-main{background:var(--blue2);color:#fff;margin-bottom:.4rem}
+.btn-c-main:hover{background:var(--blue3)}
+.btn-c-wa{background:#25D366;color:#fff}
+.btn-c-ghost{background:transparent;border:1px solid var(--border);color:var(--ink2);height:34px;font-size:12px;margin-top:.4rem}
+.btn-c-ghost:hover{background:var(--bg2)}
+.wa-section{display:none;margin-bottom:.5rem}
+.success-panel{text-align:center;display:none}.success-panel.on{display:block}
+.success-icon{width:48px;height:48px;background:var(--blue2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto .8rem;color:#fff;font-size:20px}
+
 /* ── RESPONSIVE ────────────────────────────── */
 @media(max-width:900px){
   .hero{grid-template-columns:1fr}
@@ -557,114 +713,307 @@ footer{background:var(--ink);padding:3rem 2.5rem;border-top:1px solid rgba(255,2
   <div class="section-header" style="text-align:center;margin-bottom:2.5rem">
     <div class="section-eyebrow" style="justify-content:center"><div class="squares"><div class="sq sq1"></div><div class="sq sq2"></div><div class="sq sq3"></div></div>Herramienta gratuita</div>
     <div class="section-title">¿Cuánto cuesta tu casa?</div>
-    <div class="section-sub" style="margin:0 auto;max-width:520px">Calculá el costo estimado en 2 minutos. Costos reales verificados en obras PMD de GBA Norte.</div>
+    <div class="section-sub" style="margin:0 auto;max-width:520px">Calculá el costo estimado en minutos. Costos reales verificados en obras PMD de GBA Norte.</div>
   </div>
-  <div class="cotiz-wrap" id="cotiz-wrap">
-    <div class="cotiz-prog" id="cotiz-prog" style="display:none"><div class="cotiz-pr" id="cpr1"></div><div class="cotiz-pr" id="cpr2"></div><div class="cotiz-pr" id="cpr3"></div><div class="cotiz-pr" id="cpr4"></div></div>
-    <div class="cotiz-mode-badge" id="cotiz-mode-badge" onclick="cResetMode()"></div>
 
-    <div class="cotiz-panel on" id="cp0">
+  <div class="cotiz-outer" id="cotiz-outer">
+    <div class="cotiz-prog" id="cotiz-prog"><div class="c-pr" id="cpr1"></div><div class="c-pr" id="cpr2"></div><div class="c-pr" id="cpr3"></div><div class="c-pr" id="cpr4"></div><div class="c-pr" id="cpr5"></div></div>
+    <div class="mode-badge" id="mode-badge" onclick="cReset()"></div>
+
+    <!-- SELECTOR DE MODO -->
+    <div class="cotiz-mode-sel on" id="mode-sel">
       <div class="c-eyebrow">Antes de empezar</div>
-      <h3 class="c-title">¿Cómo preferís cotizar?</h3>
-      <p class="c-sub">El resultado es el mismo — solo cambia cómo llegamos.</p>
+      <div class="c-htitle">¿Cómo querés cotizar?</div>
+      <p class="c-sub">El resultado es el mismo — solo cambia el nivel de detalle.</p>
       <div class="cotiz-mode-grid">
-        <div class="cotiz-mode-card" onclick="cSetMode('pro')">
-          <div class="cmc-icon">⚡</div>
-          <div class="cmc-title">Rápido y técnico</div>
-          <div class="cmc-desc">Sé lo que quiero. SF, m², nivel, aberturas. Sin explicaciones.</div>
-          <span class="cmc-badge badge-pro">Para el que ya sabe</span>
+        <div class="cotiz-mc" onclick="cStartMode('guiado')">
+          <div class="mc-icon">🏠</div>
+          <div class="mc-title">Simple y guiado</div>
+          <div class="mc-desc">3 preguntas, sin tecnicismos. Para el que recién empieza a pensar en construir.</div>
+          <span class="mc-badge badge-g">Recomendado</span>
         </div>
-        <div class="cotiz-mode-card" onclick="cSetMode('guiado')">
-          <div class="cmc-icon">🏠</div>
-          <div class="cmc-title">Me guían paso a paso</div>
-          <div class="cmc-desc">Primera casa o no sé de construcción. Quiero entender qué elijo.</div>
-          <span class="cmc-badge badge-guiado">Con explicaciones</span>
+        <div class="cotiz-mc" onclick="cStartMode('pro')">
+          <div class="mc-icon">⚡</div>
+          <div class="mc-title">Técnico por rubro</div>
+          <div class="mc-desc">Elegís cubierta, pisos, cocina, aberturas, calefacción y más. Para el que ya sabe.</div>
+          <span class="mc-badge badge-p">Modo avanzado</span>
         </div>
       </div>
     </div>
 
-    <div class="cotiz-panel" id="cp1">
-      <div class="c-eyebrow" id="cp1-eyebrow">Paso 1 · Superficie</div>
-      <h3 class="c-title" id="cp1-title">¿Cuántos m²?</h3>
-      <p class="c-sub" id="cp1-sub"></p>
-      <div class="c-m2-wrap">
-        <label class="c-label" id="cp1-label">Metros cuadrados cubiertos</label>
-        <div class="c-m2-row">
-          <input type="number" class="c-m2-in" id="c-m2" placeholder="150" min="40" max="800">
-          <span class="c-m2-unit">m²</span>
-        </div>
-        <div class="c-chips">
-          <button class="c-chip" onclick="cSetM2(80)">80</button>
-          <button class="c-chip" onclick="cSetM2(120)">120</button>
-          <button class="c-chip" onclick="cSetM2(160)">160</button>
-          <button class="c-chip" onclick="cSetM2(200)">200</button>
-          <button class="c-chip" onclick="cSetM2(260)">260</button>
-          <button class="c-chip" onclick="cSetM2(350)">350</button>
-        </div>
-        <div class="c-hint" id="cp1-hint"></div>
+    <!-- ══ MODO GUIADO ══════════════════════════════════════════════ -->
+
+    <!-- G: Paso 1 — M² -->
+    <div class="g-panel" id="gp1">
+      <div class="c-eyebrow">Paso 1 de 3</div>
+      <div class="c-htitle">¿Cuántos metros necesitás?</div>
+      <p class="c-sub">Para una familia de 3-4 personas lo habitual es entre 120 y 200 m².</p>
+      <div class="c-m2-row">
+        <input type="number" class="c-m2-in" id="g-m2" placeholder="150" min="40" max="800">
+        <span class="c-m2-unit">m²</span>
       </div>
-      <button class="c-btn c-btn-main" onclick="cGoP2()">Siguiente →</button>
-      <button class="c-btn c-btn-ghost" onclick="cGo(0)">← Atrás</button>
-    </div>
-
-    <div class="cotiz-panel" id="cp2">
-      <div class="c-eyebrow" id="cp2-eyebrow">Paso 2 · Terminaciones</div>
-      <h3 class="c-title" id="cp2-title">¿Qué nivel de terminación?</h3>
-      <p class="c-sub" id="cp2-sub"></p>
-      <div class="c-opts" id="c-nivel-opts"></div>
-      <button class="c-btn c-btn-main" onclick="cGoP3()">Siguiente →</button>
-      <button class="c-btn c-btn-ghost" onclick="cGo(1)">← Atrás</button>
-    </div>
-
-    <div class="cotiz-panel" id="cp3">
-      <div class="c-eyebrow" id="cp3-eyebrow">Paso 3 · Extras</div>
-      <h3 class="c-title" id="cp3-title">¿Sumamos algo más?</h3>
-      <p class="c-sub" id="cp3-sub"></p>
-      <div class="c-extra-row" id="cx-plantas" onclick="cToggleExtra('plantas')"><div class="cer-left"><span class="cer-label" id="cx-plantas-label">Dos plantas</span><span class="cer-desc" id="cx-plantas-desc">+8% sobre el total</span></div><div class="cer-toggle"></div></div>
-      <div class="c-extra-row" id="cx-pileta" onclick="cToggleExtra('pileta')"><div class="cer-left"><span class="cer-label" id="cx-pileta-label">Pileta</span><span class="cer-desc" id="cx-pileta-desc">USD 13.265 fijo</span></div><div class="cer-toggle"></div></div>
-      <div class="c-extra-row" id="cx-garage" onclick="cToggleExtra('garage')"><div class="cer-left"><span class="cer-label" id="cx-garage-label">Garage cubierto</span><span class="cer-desc" id="cx-garage-desc">USD 8.000 fijo</span></div><div class="cer-toggle"></div></div>
-      <button class="c-btn c-btn-main" onclick="cGoResult()">Ver mi presupuesto →</button>
-      <button class="c-btn c-btn-ghost" onclick="cGo(2)">← Atrás</button>
-    </div>
-
-    <div class="cotiz-panel" id="cp4">
-      <div class="c-eyebrow">Tu estimación</div>
-      <div class="c-summary-chips" id="c-summary-chips"></div>
-      <div class="c-result-hero">
-        <div class="c-result-label">Inversión estimada — sin terreno</div>
-        <div class="c-result-num" id="c-result-num">–</div>
-        <div class="c-result-ars" id="c-result-ars">–</div>
+      <div class="c-chips">
+        <button class="c-chip" onclick="setGm2(80)">80</button>
+        <button class="c-chip" onclick="setGm2(120)">120</button>
+        <button class="c-chip" onclick="setGm2(160)">160</button>
+        <button class="c-chip" onclick="setGm2(200)">200</button>
+        <button class="c-chip" onclick="setGm2(260)">260</button>
+        <button class="c-chip" onclick="setGm2(350)">350</button>
       </div>
-      <div class="c-result-grid" id="c-result-grid"></div>
-      <div class="c-result-note" id="c-result-note"></div>
-      <div class="c-lead-sep">
-        <p class="c-lead-intro" id="c-lead-intro">Mandanos tu WhatsApp y te enviamos el desglose completo. Te contactamos sin compromiso.</p>
-        <div class="c-field-row">
-          <div class="c-field"><label>Nombre</label><input type="text" id="c-nombre" placeholder="Tu nombre"></div>
-          <div class="c-field"><label>WhatsApp</label><input type="tel" id="c-tel" placeholder="+54 9 11..."></div>
+      <div class="c-hint">¿No sabés exactamente? Usá un número redondo.</div>
+      <button class="btn-c btn-c-main" onclick="gGo(2)">Siguiente →</button>
+      <button class="btn-c btn-c-ghost" onclick="cReset()">← Cambiar modo</button>
+    </div>
+
+    <!-- G: Paso 2 — Nivel -->
+    <div class="g-panel" id="gp2">
+      <div class="c-eyebrow">Paso 2 de 3</div>
+      <div class="c-htitle">¿Cómo imaginás tu casa?</div>
+      <p class="c-sub">Sin términos técnicos — elegí lo que más se parezca a tu idea.</p>
+      <div class="g-opts" id="g-nivel-opts">
+        <div class="g-opt gsel" onclick="gSelNivel(this,'basica')">
+          <div class="g-opt-body">
+            <div class="g-opt-hdr"><span class="g-opt-label">Funcional y prolija</span><span class="g-opt-price">desde USD 410/m²</span></div>
+            <div class="g-opt-desc">Piso cerámico, ventanas estándar, cocina práctica. Todo bien resuelto.</div>
+          </div><div class="g-check"></div>
         </div>
-        <div class="c-field" style="margin-bottom:.8rem">
-          <label>¿En qué etapa estás?</label>
-          <select id="c-etapa">
-            <option value="">Seleccioná</option>
-            <option>Tengo terreno y quiero arrancar</option>
-            <option>Estoy buscando terreno</option>
-            <option>Solo quiero saber el costo</option>
-            <option>Ya tengo proyecto, busco constructor</option>
-          </select>
+        <div class="g-opt" onclick="gSelNivel(this,'media_alta')">
+          <div class="g-opt-body">
+            <div class="g-opt-hdr"><span class="g-opt-label">Con onda y cómoda</span><span class="g-opt-price">desde USD 600/m²</span></div>
+            <div class="g-opt-desc">DVH negro, porcelanato, cocina con isla. El estándar de los barrios privados de GBA Norte.</div>
+            <div class="g-opt-detail" style="display:block;font-size:10px;color:var(--blue2);margin-top:3px">Verificado en obra real PMD — lo que ves es lo que pagás.</div>
+          </div><div class="g-check"></div>
         </div>
-        <button class="c-btn c-btn-main" onclick="cEnviar()">Recibir desglose completo →</button>
-        <button class="c-btn c-btn-ghost" onclick="cGo(3)">← Cambiar datos</button>
+        <div class="g-opt" onclick="gSelNivel(this,'alta')">
+          <div class="g-opt-body">
+            <div class="g-opt-hdr"><span class="g-opt-label">Premium, sin detalles</span><span class="g-opt-price">desde USD 800/m²</span></div>
+            <div class="g-opt-desc">Aberturas importadas, domótica, materiales de diseño en toda la casa.</div>
+          </div><div class="g-check"></div>
+        </div>
+        <div class="g-opt" onclick="gSelNivel(this,'premium')">
+          <div class="g-opt-body">
+            <div class="g-opt-hdr"><span class="g-opt-label">Lo mejor de lo mejor</span><span class="g-opt-price">desde USD 1.100/m²</span></div>
+            <div class="g-opt-desc">Sin límites: cocina importada, spa, materiales seleccionados uno a uno.</div>
+          </div><div class="g-check"></div>
+        </div>
+      </div>
+      <button class="btn-c btn-c-main" onclick="gGo(3)">Siguiente →</button>
+      <button class="btn-c btn-c-ghost" onclick="gGo(1)">← Atrás</button>
+    </div>
+
+    <!-- G: Paso 3 — Extras -->
+    <div class="g-panel" id="gp3">
+      <div class="c-eyebrow">Paso 3 de 3</div>
+      <div class="c-htitle">¿Sumamos algo más?</div>
+      <p class="c-sub">Son opcionales. Podés agregarlos o sacarlos después.</p>
+      <div class="g-extra" id="gx-plantas" onclick="gTogExt('plantas')">
+        <div class="ge-left"><span class="ge-label">Quiero dos pisos</span><span class="ge-desc">Una planta encima de la otra, con escalera.</span><span class="ge-price">+8% sobre el total</span></div>
+        <div class="g-toggle"></div>
+      </div>
+      <div class="g-extra" id="gx-pileta" onclick="gTogExt('pileta')">
+        <div class="ge-left"><span class="ge-label">Con pileta</span><span class="ge-desc">La construimos nosotros, MO incluida.</span><span class="ge-price">USD 13.265 fijo</span></div>
+        <div class="g-toggle"></div>
+      </div>
+      <div class="g-extra" id="gx-garage" onclick="gTogExt('garage')">
+        <div class="ge-left"><span class="ge-label">Garage techado</span><span class="ge-desc">Espacio cubierto para el auto.</span><span class="ge-price">USD 8.000 fijo</span></div>
+        <div class="g-toggle"></div>
+      </div>
+      <button class="btn-c btn-c-main" style="margin-top:1rem" onclick="gCalcular()">Ver mi presupuesto →</button>
+      <button class="btn-c btn-c-ghost" onclick="gGo(2)">← Atrás</button>
+    </div>
+
+    <!-- ══ MODO PRO ═════════════════════════════════════════════════ -->
+
+    <!-- PRO: step header -->
+    <div class="p-panel" id="pp-header">
+      <div class="p-steps" id="p-steps">
+        <div class="p-step pact" onclick="pGo(1)"><div class="p-step-num">1</div><span>Proyecto</span></div>
+        <div class="p-step" onclick="pGo(2)"><div class="p-step-num">2</div><span>Estructura</span></div>
+        <div class="p-step" onclick="pGo(3)"><div class="p-step-num">3</div><span>Terminaciones</span></div>
+        <div class="p-step" onclick="pGo(4)"><div class="p-step-num">4</div><span>Instalaciones</span></div>
       </div>
     </div>
 
-    <div class="cotiz-panel" id="cp5">
-      <div class="c-success-icon"></div>
-      <h3 class="c-title" style="font-size:1.5rem;text-align:center;margin-bottom:.5rem">¡Listo!</h3>
-      <p class="c-sub" style="text-align:center">Te contactamos en las próximas horas con el desglose completo.</p>
-      <a id="c-wa-final" href="#" target="_blank"><button class="c-btn-wa">Hablar por WhatsApp ahora</button></a>
+    <!-- PRO: P1 Proyecto -->
+    <div class="p-panel" id="pp1">
+      <div class="p-sec">
+        <div class="p-sec-title">Superficie y tipología</div>
+        <div class="p-fg">
+          <div class="p-field"><label>M² cubiertos *</label><input type="number" id="p-m2" placeholder="200" min="40" max="1000"></div>
+          <div class="p-field"><label>M² semicubiertos</label><input type="number" id="p-m2semi" placeholder="0" value="0" min="0"></div>
+          <div class="p-field"><label>Plantas</label><select id="p-plantas"><option value="1">1 planta</option><option value="2">2 plantas (+8%)</option></select></div>
+          <div class="p-field"><label>Suelo</label><select id="p-suelo"><option value="normal">Normal / tosca</option><option value="relleno">Relleno (+USD 15/m²)</option></select></div>
+        </div>
+      </div>
+      <div class="p-sec">
+        <div class="p-sec-title">Sistema</div>
+        <div class="p-rg">
+          <label class="p-rc psel" onclick="pSelRC(this,'p-sis','sf')"><input type="radio" name="p-sis" value="sf" checked><div class="p-rc-check"></div><div class="p-rc-label">Steel framing</div><div class="p-rc-desc">Perfiles galvanizados · barrios privados</div><div class="p-rc-price">Sistema PMD</div></label>
+          <label class="p-rc" onclick="pSelRC(this,'p-sis','trad')"><input type="radio" name="p-sis" value="trad"><div class="p-rc-check"></div><div class="p-rc-label">Tradicional</div><div class="p-rc-desc">Mampostería + hormigón</div><div class="p-rc-price">-5% vs SF</div></label>
+        </div>
+      </div>
+      <div class="p-sec">
+        <div class="p-sec-title">Adicionales</div>
+        <div class="p-toggle-row" onclick="pTogExt('pileta')"><div class="ptr-left"><span class="ptr-label">Pileta</span><span class="ptr-desc">MO César Rolón · precio fijo</span><span class="ptr-price">USD 13.265</span></div><div class="p-tog" id="pt-pileta"></div></div>
+        <div class="p-toggle-row" onclick="pTogExt('garage')"><div class="ptr-left"><span class="ptr-label">Garage cubierto</span><span class="ptr-desc">Estructura SF · 1 auto</span><span class="ptr-price">USD 8.000</span></div><div class="p-tog" id="pt-garage"></div></div>
+        <div class="p-toggle-row" onclick="pTogExt('terraza')"><div class="ptr-left"><span class="ptr-label">Terraza / deck</span><span class="ptr-desc">Madera o porcelanato exterior</span><span class="ptr-price">USD 4.000</span></div><div class="p-tog" id="pt-terraza"></div></div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-top:.5rem">
+        <button class="btn-c btn-c-main" style="width:auto;padding:0 24px" onclick="pGo(2)">Siguiente →</button>
+      </div>
     </div>
-  </div>
+
+    <!-- PRO: P2 Estructura -->
+    <div class="p-panel" id="pp2">
+      <div class="p-sec">
+        <div class="p-sec-title">Cubierta / techo <span class="p-sec-usd" id="psu-cubierta"></span></div>
+        <div class="p-rg">
+          <label class="p-rc psel" onclick="pSelRC(this,'p-cub','chapa_galv')"><input type="radio" name="p-cub" value="chapa_galv" checked><div class="p-rc-check"></div><div class="p-rc-label">Chapa galvanizada</div><div class="p-rc-desc">C25 Ternium · estándar SF</div><div class="p-rc-price">USD 9.5/m²</div></label>
+          <label class="p-rc" onclick="pSelRC(this,'p-cub','chapa_prepint')"><input type="radio" name="p-cub" value="chapa_prepint"><div class="p-rc-check"></div><div class="p-rc-label">Chapa prepintada</div><div class="p-rc-desc">Color a elección · mayor durabilidad</div><div class="p-rc-price">USD 12/m²</div></label>
+          <label class="p-rc" onclick="pSelRC(this,'p-cub','membrana')"><input type="radio" name="p-cub" value="membrana"><div class="p-rc-check"></div><div class="p-rc-label">Cubierta plana</div><div class="p-rc-desc">Losa + membrana líquida</div><div class="p-rc-price">USD 18/m²</div></label>
+        </div>
+      </div>
+      <div class="p-sec">
+        <div class="p-sec-title">Revestimiento exterior <span class="p-sec-usd" id="psu-revext"></span></div>
+        <div class="p-rg">
+          <label class="p-rc psel" onclick="pSelRC(this,'p-rev','eifs')"><input type="radio" name="p-rev" value="eifs" checked><div class="p-rc-check"></div><div class="p-rc-label">EIFS / revoque</div><div class="p-rc-desc">Aislación térmica exterior · estándar PMD</div><div class="p-rc-price">incluido</div></label>
+          <label class="p-rc" onclick="pSelRC(this,'p-rev','porcelanato')"><input type="radio" name="p-rev" value="porcelanato"><div class="p-rc-check"></div><div class="p-rc-label">Porcelanato ext.</div><div class="p-rc-desc">60x60 o 90x90 colocado</div><div class="p-rc-price">+USD 45/m² fach.</div></label>
+          <label class="p-rc" onclick="pSelRC(this,'p-rev','madera')"><input type="radio" name="p-rev" value="madera"><div class="p-rc-check"></div><div class="p-rc-label">Listones madera</div><div class="p-rc-desc">IPE / deck · como Punta del Este</div><div class="p-rc-price">+USD 60/m² fach.</div></label>
+          <label class="p-rc" onclick="pSelRC(this,'p-rev','corten')"><input type="radio" name="p-rev" value="corten"><div class="p-rc-check"></div><div class="p-rc-label">Chapa / cortén</div><div class="p-rc-desc">Elemento arquitectónico de diseño</div><div class="p-rc-price">+USD 80/m² fach.</div></label>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:.5rem">
+        <button class="btn-c btn-c-ghost" style="width:auto;padding:0 18px" onclick="pGo(1)">← Atrás</button>
+        <button class="btn-c btn-c-main" style="width:auto;padding:0 24px" onclick="pGo(3)">Siguiente →</button>
+      </div>
+    </div>
+
+    <!-- PRO: P3 Terminaciones -->
+    <div class="p-panel" id="pp3">
+      <div class="p-sec">
+        <div class="p-sec-title">Pisos interiores <span class="p-sec-usd" id="psu-pisos"></span></div>
+        <div class="p-rg">
+          <label class="p-rc" onclick="pSelRC(this,'p-pisos','cemento')"><input type="radio" name="p-pisos" value="cemento"><div class="p-rc-check"></div><div class="p-rc-label">Cemento alisado</div><div class="p-rc-desc">Microcemento · industrial</div><div class="p-rc-price">USD 18/m²</div></label>
+          <label class="p-rc psel" onclick="pSelRC(this,'p-pisos','ceramico')"><input type="radio" name="p-pisos" value="ceramico" checked><div class="p-rc-check"></div><div class="p-rc-label">Cerámico 60x60</div><div class="p-rc-desc">Nacional primera marca</div><div class="p-rc-price">USD 28/m²</div></label>
+          <label class="p-rc" onclick="pSelRC(this,'p-pisos','porcelanato')"><input type="radio" name="p-pisos" value="porcelanato"><div class="p-rc-check"></div><div class="p-rc-label">Porcelanato 80x80</div><div class="p-rc-desc">Importado o premium</div><div class="p-rc-price">USD 45/m²</div></label>
+          <label class="p-rc" onclick="pSelRC(this,'p-pisos','madera')"><input type="radio" name="p-pisos" value="madera"><div class="p-rc-check"></div><div class="p-rc-label">Piso de madera</div><div class="p-rc-desc">Flotante o parquet</div><div class="p-rc-price">USD 55/m²</div></label>
+        </div>
+      </div>
+      <div class="p-sec">
+        <div class="p-sec-title">Cocina y mesadas <span class="p-sec-usd" id="psu-cocina"></span></div>
+        <div class="p-rg">
+          <label class="p-rc" onclick="pSelRC(this,'p-cocina','basica')"><input type="radio" name="p-cocina" value="basica"><div class="p-rc-check"></div><div class="p-rc-label">Básica</div><div class="p-rc-desc">Melamina · mesada granito</div><div class="p-rc-price">USD 4.000</div></label>
+          <label class="p-rc psel" onclick="pSelRC(this,'p-cocina','media')"><input type="radio" name="p-cocina" value="media" checked><div class="p-rc-check"></div><div class="p-rc-label">Con isla</div><div class="p-rc-desc">Melamina + silestone · Naudir ✓</div><div class="p-rc-price">USD 8.000</div></label>
+          <label class="p-rc" onclick="pSelRC(this,'p-cocina','diseno')"><input type="radio" name="p-cocina" value="diseno"><div class="p-rc-check"></div><div class="p-rc-label">De diseño</div><div class="p-rc-desc">Lacada · Silestone premium</div><div class="p-rc-price">USD 15.000</div></label>
+          <label class="p-rc" onclick="pSelRC(this,'p-cocina','importada')"><input type="radio" name="p-cocina" value="importada"><div class="p-rc-check"></div><div class="p-rc-label">Importada</div><div class="p-rc-desc">Leicht, SieMatic o similar</div><div class="p-rc-price">USD 35.000+</div></label>
+        </div>
+      </div>
+      <div class="p-sec">
+        <div class="p-sec-title">Aberturas <span class="p-sec-usd" id="psu-aber"></span></div>
+        <div class="p-rg">
+          <label class="p-rc" onclick="pSelRC(this,'p-aber','simple')"><input type="radio" name="p-aber" value="simple"><div class="p-rc-check"></div><div class="p-rc-label">Aluminio simple</div><div class="p-rc-desc">Sin DVH</div><div class="p-rc-price">USD 100/m²</div></label>
+          <label class="p-rc psel" onclick="pSelRC(this,'p-aber','dvh')"><input type="radio" name="p-aber" value="dvh" checked><div class="p-rc-check"></div><div class="p-rc-label">Negro DVH</div><div class="p-rc-desc">Modena + mosquitero · Naudir ✓</div><div class="p-rc-price">USD 195/m²</div></label>
+          <label class="p-rc" onclick="pSelRC(this,'p-aber','rpt')"><input type="radio" name="p-aber" value="rpt"><div class="p-rc-check"></div><div class="p-rc-label">RPT importado</div><div class="p-rc-desc">Rotura puente térmico</div><div class="p-rc-price">USD 350/m²</div></label>
+          <label class="p-rc" onclick="pSelRC(this,'p-aber','schueco')"><input type="radio" name="p-aber" value="schueco"><div class="p-rc-check"></div><div class="p-rc-label">Schüco</div><div class="p-rc-desc">Sistema europeo premium</div><div class="p-rc-price">USD 600/m²</div></label>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:.5rem">
+        <button class="btn-c btn-c-ghost" style="width:auto;padding:0 18px" onclick="pGo(2)">← Atrás</button>
+        <button class="btn-c btn-c-main" style="width:auto;padding:0 24px" onclick="pGo(4)">Siguiente →</button>
+      </div>
+    </div>
+
+    <!-- PRO: P4 Instalaciones -->
+    <div class="p-panel" id="pp4">
+      <div class="p-sec">
+        <div class="p-sec-title">Instalación sanitaria <span class="p-sec-usd" id="psu-sanit"></span></div>
+        <div class="p-fg" style="margin-bottom:.6rem">
+          <div class="p-field"><label>Baños</label><select id="p-banos" onchange="pUpdateSub()"><option value="1">1 baño</option><option value="2" selected>2 baños</option><option value="3">3 baños</option><option value="4">4 baños</option><option value="5">5+</option></select></div>
+          <div class="p-field"><label>Nivel</label><select id="p-sanit" onchange="pUpdateSub()"><option value="basico">Básico (nacionales)</option><option value="medio" selected>Medio (Ferrum/Roca)</option><option value="premium">Premium (Grohe/imp.)</option></select></div>
+        </div>
+        <div class="p-rg">
+          <label class="p-rc" onclick="pSelRC(this,'p-bdet','ceramico')"><input type="radio" name="p-bdet" value="ceramico"><div class="p-rc-check"></div><div class="p-rc-label">Cerámico</div><div class="p-rc-desc">Nacional 30x60</div><div class="p-rc-price">incluido</div></label>
+          <label class="p-rc psel" onclick="pSelRC(this,'p-bdet','porcelanato')"><input type="radio" name="p-bdet" value="porcelanato" checked><div class="p-rc-check"></div><div class="p-rc-label">Porcelanato mármol</div><div class="p-rc-desc">Como el portfolio PMD</div><div class="p-rc-price">+USD 800/baño</div></label>
+          <label class="p-rc" onclick="pSelRC(this,'p-bdet','marmol')"><input type="radio" name="p-bdet" value="marmol"><div class="p-rc-check"></div><div class="p-rc-label">Mármol / travertino</div><div class="p-rc-desc">Importado · premium</div><div class="p-rc-price">+USD 2.500/baño</div></label>
+        </div>
+      </div>
+      <div class="p-sec">
+        <div class="p-sec-title">Eléctrica <span class="p-sec-usd" id="psu-elec"></span></div>
+        <div class="p-fg">
+          <div class="p-field">
+            <label>Bocas eléctricas</label>
+            <div class="slider-wrap">
+              <div class="slider-row">
+                <input type="range" id="p-bocas" min="20" max="120" value="50" step="5" oninput="document.getElementById('p-bocas-val').textContent=this.value+' bocas';pUpdateSub()">
+                <span class="slider-val" id="p-bocas-val">50 bocas</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--ink3)"><span>20</span><span>120</span></div>
+            </div>
+          </div>
+          <div class="p-field"><label>Tablero</label><select id="p-tablero" onchange="pUpdateSub()"><option value="basico">Básico (20 circuitos)</option><option value="medio" selected>Medio (40 circuitos)</option><option value="premium">Premium + UPS</option></select></div>
+        </div>
+      </div>
+      <div class="p-sec">
+        <div class="p-sec-title">Calefacción <span class="p-sec-usd" id="psu-calef"></span></div>
+        <div class="p-rg">
+          <label class="p-rc" onclick="pSelRC(this,'p-calef','ninguna')"><input type="radio" name="p-calef" value="ninguna"><div class="p-rc-check"></div><div class="p-rc-label">Sin calefacción</div><div class="p-rc-desc">Cotizar aparte</div><div class="p-rc-price">USD 0</div></label>
+          <label class="p-rc psel" onclick="pSelRC(this,'p-calef','caldera_rad')"><input type="radio" name="p-calef" value="caldera_rad" checked><div class="p-rc-check"></div><div class="p-rc-label">Caldera + radiadores</div><div class="p-rc-desc">Gas natural</div><div class="p-rc-price">USD 12/m²</div></label>
+          <label class="p-rc" onclick="pSelRC(this,'p-calef','losa_rad')"><input type="radio" name="p-calef" value="losa_rad"><div class="p-rc-check"></div><div class="p-rc-label">Losa radiante</div><div class="p-rc-desc">Caldera + circuitos piso</div><div class="p-rc-price">USD 22/m²</div></label>
+          <label class="p-rc" onclick="pSelRC(this,'p-calef','split')"><input type="radio" name="p-calef" value="split"><div class="p-rc-check"></div><div class="p-rc-label">Split / AC</div><div class="p-rc-desc">Frío-calor, sin gas</div><div class="p-rc-price">USD 8/m²</div></label>
+        </div>
+      </div>
+      <div class="p-sec">
+        <div class="p-sec-title">Honorarios PMD</div>
+        <div class="p-rg">
+          <label class="p-rc psel" onclick="pSelRC(this,'p-hon','0.12')"><input type="radio" name="p-hon" value="0.12" checked><div class="p-rc-check"></div><div class="p-rc-label">Dirección de obra</div><div class="p-rc-desc">PMD dirige la ejecución</div><div class="p-rc-price">12% sobre costo</div></label>
+          <label class="p-rc" onclick="pSelRC(this,'p-hon','0.18')"><input type="radio" name="p-hon" value="0.18"><div class="p-rc-check"></div><div class="p-rc-label">Proyecto + dirección</div><div class="p-rc-desc">Diseño + ejecución</div><div class="p-rc-price">18% sobre costo</div></label>
+          <label class="p-rc" onclick="pSelRC(this,'p-hon','0')"><input type="radio" name="p-hon" value="0"><div class="p-rc-check"></div><div class="p-rc-label">Sin honorarios</div><div class="p-rc-desc">Solo construcción</div><div class="p-rc-price">USD 0</div></label>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:.5rem">
+        <button class="btn-c btn-c-ghost" style="width:auto;padding:0 18px" onclick="pGo(3)">← Atrás</button>
+        <button class="btn-c btn-c-main" style="width:auto;padding:0 24px" onclick="pCalcular()">Ver mi presupuesto →</button>
+      </div>
+    </div>
+
+    <!-- ══ RESULTADO COMPARTIDO ═══════════════════════════════════ -->
+    <div class="r-panel" id="rp">
+      <div class="r-chips" id="r-chips"></div>
+      <div class="r-hero">
+        <div class="r-label">Inversión estimada — sin terreno</div>
+        <div class="r-total-num" id="r-total">–</div>
+        <div class="r-ars" id="r-ars">–</div>
+        <div class="r-note" id="r-note">Estimación ±10% · Costos verificados obras PMD · mar-2026 · TC $1.425</div>
+      </div>
+      <div class="desglose-wrap">
+        <div class="dl-header"><span class="dl-title">Desglose por rubro</span><span class="dl-badge" id="dl-badge">🔒 Requiere datos</span></div>
+        <div class="dl-locked" id="dl-locked">
+          <div class="dl-lock-icon">🔒</div>
+          <div><div class="dl-locked-text">Dejá tu WhatsApp para ver el desglose completo y recibir el presupuesto detallado.</div>
+          <button class="btn-unlock" onclick="showLeadForm()">Desbloquear desglose →</button></div>
+        </div>
+        <div class="dl-rows" id="dl-rows" style="display:none"></div>
+      </div>
+      <div class="lead-form-inner" id="lead-form">
+        <div class="lfi-title">Un paso más</div>
+        <div class="lfi-sub">Dejá tu WhatsApp y te enviamos el presupuesto detallado.</div>
+        <div class="lf-row">
+          <div class="lf-f"><label>Nombre</label><input type="text" id="lf-nombre" placeholder="Tu nombre"></div>
+          <div class="lf-f"><label>WhatsApp</label><input type="tel" id="lf-tel" placeholder="+54 9 11..."></div>
+        </div>
+        <div class="lf-row">
+          <div class="lf-f"><label>Zona</label><select id="lf-zona"><option value="">Seleccioná</option><option>Nordelta / Tigre</option><option>San Isidro / Acassuso</option><option>Escobar / Maschwitz</option><option>Pilar / Zona Norte</option><option>Otra zona GBA</option></select></div>
+          <div class="lf-f"><label>Etapa</label><select id="lf-etapa"><option value="">Seleccioná</option><option>Tengo terreno y quiero arrancar</option><option>Estoy buscando terreno</option><option>Ya tengo proyecto</option><option>Solo quiero referencia</option></select></div>
+        </div>
+        <button class="btn-c btn-c-main" onclick="desbloquear()">Ver desglose completo →</button>
+      </div>
+      <div class="wa-section" id="wa-section">
+        <a id="wa-link" href="#" target="_blank"><button class="btn-c btn-c-wa">Hablar con PMD por WhatsApp</button></a>
+      </div>
+      <button class="btn-c btn-c-ghost" onclick="cReset()">Calcular otra vez</button>
+    </div>
+
+  </div><!-- /cotiz-outer -->
 </section>
 
 <!-- ZONAS -->
@@ -689,7 +1038,7 @@ footer{background:var(--ink);padding:3rem 2.5rem;border-top:1px solid rgba(255,2
       <div class="contact-info">
         <div class="ci-item"><span class="ci-label">Ubicación</span><span class="ci-val">Benavidez, Tigre, Buenos Aires</span></div>
         <div class="ci-item"><span class="ci-label">WhatsApp</span><span class="ci-val">+54 9 11 3519-2030</span></div>
-        <div class="ci-item"><span class="ci-label">Email</span><span class="ci-val"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="21484f474e61514c454053505448554442555453400f424e4c">[email&#160;protected]</a></span><span class="ci-sub">Respuesta en 24hs</span></div>
+        <div class="ci-item"><span class="ci-label">Email</span><span class="ci-val"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d3babdb5bc93a3beb7b2a1a2a6baa7b6b0a7a6a1b2fdb0bcbe">[email&#160;protected]</a></span><span class="ci-sub">Respuesta en 24hs</span></div>
         <div class="ci-item"><span class="ci-label">Horario</span><span class="ci-val">Lunes a viernes · 8:00 a 17:00hs</span></div>
       </div>
     </div>
@@ -919,3 +1268,318 @@ function cEnviar(){
     `➕ Extras: ${extras}
 `+
     `💰 USD ${cfmt(Math.round(base*0.9))}–${cfmt(Math
+<script>
+function filterPf(btn,cat){document.querySelectorAll('.pf-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.pj-card').forEach(c=>{c.style.display=(cat==='todos'||c.dataset.cat===cat)?'block':'none';})}
+
+// ══════════════════════════════════════════════════════════════════
+// COTIZADOR — LÓGICA COMPARTIDA
+// ══════════════════════════════════════════════════════════════════
+const TC=1425;
+let cMode=null; // 'guiado' | 'pro'
+let rData={}; // resultado para compartir entre modos
+
+function cfmt(n){return Math.round(n).toLocaleString('es-AR')}
+
+// Mostrar/ocultar panels genérico
+function showOnly(ids,onId){
+  ids.forEach(id=>{const el=document.getElementById(id);if(el)el.classList.toggle('on',id===onId)});
+}
+
+// Progress bar
+function setProgress(n,total){
+  [1,2,3,4,5].forEach(i=>{
+    const el=document.getElementById('cpr'+i);
+    if(el) el.style.background=i<=n?'var(--blue2)':i===n+1?'var(--blue1)':'var(--border)';
+  });
+}
+
+// Badge de modo
+function setBadge(text){
+  const b=document.getElementById('mode-badge');
+  b.textContent=text;b.classList.add('on');
+  document.getElementById('cotiz-prog').classList.add('on');
+}
+
+function cReset(){
+  cMode=null;
+  document.getElementById('mode-badge').classList.remove('on');
+  document.getElementById('cotiz-prog').classList.remove('on');
+  // Ocultar todos los panels
+  ['gp1','gp2','gp3','pp-header','pp1','pp2','pp3','pp4','rp'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.classList.remove('on');
+  });
+  document.getElementById('mode-sel').classList.add('on');
+  [1,2,3,4,5].forEach(i=>{const el=document.getElementById('cpr'+i);if(el)el.style.background='var(--border)';});
+  scrollToCotiz();
+}
+
+function scrollToCotiz(){
+  const sec=document.getElementById('presupuestador');
+  if(sec)window.scrollTo({top:sec.offsetTop-80,behavior:'smooth'});
+}
+
+function cStartMode(m){
+  cMode=m;
+  document.getElementById('mode-sel').classList.remove('on');
+  if(m==='guiado'){
+    setBadge('🏠 Modo guiado — cambiar');
+    gGo(1);
+  } else {
+    setBadge('⚡ Modo técnico — cambiar');
+    document.getElementById('pp-header').classList.add('on');
+    document.getElementById('pp1').classList.add('on');
+    setProgress(1,4);
+  }
+}
+
+// ── MODO GUIADO ───────────────────────────────────────────────────
+let gEstado={m2:0,nivel:'media_alta',plantas:false,pileta:false,garage:false};
+const gPrecios={basica:410,media_alta:600,alta:800,premium:1100};
+
+function gGo(n){
+  ['gp1','gp2','gp3'].forEach(id=>document.getElementById(id).classList.remove('on'));
+  document.getElementById('gp'+n).classList.add('on');
+  setProgress(n,3);
+  scrollToCotiz();
+}
+
+function setGm2(v){document.getElementById('g-m2').value=v;document.getElementById('g-m2').classList.remove('cerr')}
+
+function gSelNivel(el,nivel){
+  document.querySelectorAll('#g-nivel-opts .g-opt').forEach(o=>o.classList.remove('gsel'));
+  document.querySelectorAll('#g-nivel-opts .g-check').forEach(o=>o.classList.remove('gsel'));
+  el.classList.add('gsel');el.querySelector('.g-check').classList.add('gsel');
+  gEstado.nivel=nivel;
+}
+
+function gTogExt(key){
+  gEstado[key]=!gEstado[key];
+  document.getElementById('gx-'+key).classList.toggle('gxon',gEstado[key]);
+}
+
+function gCalcular(){
+  const m2=parseInt(document.getElementById('g-m2').value);
+  if(!m2||m2<40){document.getElementById('g-m2').classList.add('cerr');document.getElementById('g-m2').focus();return;}
+  gEstado.m2=m2;
+  let base=gPrecios[gEstado.nivel]*m2;
+  if(gEstado.plantas)base*=1.08;
+  if(gEstado.pileta)base+=13265;
+  if(gEstado.garage)base+=8000;
+  const notas={
+    basica:'Estructura SF, materiales de primera calidad, terminaciones prácticas y durables.',
+    media_alta:'Verificado en obra real PMD — Naudir 308, 190m², 2026. Lo que ves es lo que se ejecutó.',
+    alta:'Aberturas RPT importadas, domótica básica, materiales de diseño. Eficiencia energética superior.',
+    premium:'Sin límite de calidad. Cada material elegido con el cliente. Garantía de 2 años.'
+  };
+  const nLabels={basica:'Funcional y prolija',media_alta:'Con onda y cómoda',alta:'Premium',premium:'Lo mejor de lo mejor'};
+  const extras=[gEstado.plantas&&'2 plantas',gEstado.pileta&&'pileta',gEstado.garage&&'garage'].filter(Boolean);
+  rData={
+    total:base,
+    rubros:[
+      {label:'Base de obra ('+gEstado.nivel+')',usd:Math.round(gPrecios[gEstado.nivel]*m2),pct:gPrecios[gEstado.nivel]*m2/base},
+      gEstado.pileta?{label:'Pileta',usd:13265,pct:13265/base}:null,
+      gEstado.garage?{label:'Garage',usd:8000,pct:8000/base}:null,
+    ].filter(Boolean),
+    chips:[m2+'m²',nLabels[gEstado.nivel],...extras],
+    nota:notas[gEstado.nivel],
+    waMsg:`Hola PMD! Calculé mi proyecto:
+📐 ${m2}m² · ${nLabels[gEstado.nivel]}
+➕ Extras: ${extras.join(', ')||'ninguno'}
+💰 USD ${cfmt(Math.round(base*0.9))}–${cfmt(Math.round(base*1.1))}`
+  };
+  mostrarResultado();
+}
+
+// ── MODO PRO ──────────────────────────────────────────────────────
+let pExtras={pileta:false,garage:false,terraza:false};
+const P_CUB={chapa_galv:9.5,chapa_prepint:12,membrana:18};
+const P_REV={eifs:0,porcelanato:45,madera:60,corten:80};
+const P_PISOS={cemento:18,ceramico:28,porcelanato:45,madera:55};
+const P_COCINA={basica:4000,media:8000,diseno:15000,importada:35000};
+const P_ABER={simple:100,dvh:195,rpt:350,schueco:600};
+const P_SANIT={basico:2800,medio:4200,premium:7500};
+const P_BDET={ceramico:0,porcelanato:800,marmol:2500};
+const P_TABLERO={basico:800,medio:1500,premium:3500};
+const P_CALEF={ninguna:0,caldera_rad:12,losa_rad:22,split:8};
+const BASE_SF={mat:393,mo:209,gg:10};
+const BASE_TR={mat:360,mo:195,gg:10};
+const RATIO_ABER=0.18;
+const RATIO_FACH=0.35;
+const P_BOCA=35;
+const P_PERM=10;
+
+function pGo(n){
+  ['pp1','pp2','pp3','pp4'].forEach((id,i)=>{
+    const el=document.getElementById(id);if(el)el.classList.toggle('on',i+1===n);
+    const step=document.querySelectorAll('.p-step')[i];
+    if(step){step.classList.toggle('pact',i+1===n);step.classList.toggle('pdone',i+1<n);}
+  });
+  setProgress(n,4);
+  scrollToCotiz();
+}
+
+function pSelRC(el,name,val){
+  document.querySelectorAll('[name="'+name+'"]').forEach(r=>r.closest('.p-rc').classList.remove('psel'));
+  el.classList.add('psel');el.querySelector('input').checked=true;
+  pUpdateSub();
+}
+
+function pTogExt(key){
+  pExtras[key]=!pExtras[key];
+  document.getElementById('pt-'+key).classList.toggle('on',pExtras[key]);
+}
+
+function pGetVal(name){const el=document.querySelector('[name="'+name+'"]:checked');return el?el.value:null;}
+
+function pUpdateSub(){
+  try{
+    const m2=parseInt(document.getElementById('p-m2').value)||0;
+    if(!m2)return;
+    const cubT=pGetVal('p-cub')||'chapa_galv';
+    const revT=pGetVal('p-rev')||'eifs';
+    const pisT=pGetVal('p-pisos')||'ceramico';
+    const cocT=pGetVal('p-cocina')||'media';
+    const abeT=pGetVal('p-aber')||'dvh';
+    const banos=parseInt(document.getElementById('p-banos').value)||2;
+    const saT=document.getElementById('p-sanit').value||'medio';
+    const bdT=pGetVal('p-bdet')||'porcelanato';
+    const bocas=parseInt(document.getElementById('p-bocas').value)||50;
+    const tabT=document.getElementById('p-tablero').value||'medio';
+    const calT=pGetVal('p-calef')||'caldera_rad';
+    const setS=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent='USD '+cfmt(v)};
+    setS('psu-cubierta',Math.round(m2*0.88*P_CUB[cubT]));
+    setS('psu-revext',Math.round(m2*RATIO_FACH*P_REV[revT]));
+    setS('psu-pisos',Math.round(m2*P_PISOS[pisT]));
+    setS('psu-cocina',P_COCINA[cocT]);
+    setS('psu-aber',Math.round(m2*RATIO_ABER*P_ABER[abeT]));
+    setS('psu-sanit',Math.round(banos*(P_SANIT[saT]+P_BDET[bdT])));
+    setS('psu-elec',Math.round(bocas*P_BOCA+P_TABLERO[tabT]));
+    setS('psu-calef',calT==='ninguna'?0:Math.round(m2*P_CALEF[calT]));
+  }catch(e){}
+}
+
+function pCalcular(){
+  const m2=parseInt(document.getElementById('p-m2').value);
+  if(!m2||m2<40){pGo(1);document.getElementById('p-m2').focus();return;}
+  const m2semi=parseInt(document.getElementById('p-m2semi').value)||0;
+  const plantas=document.getElementById('p-plantas').value;
+  const suelo=document.getElementById('p-suelo').value;
+  const sis=pGetVal('p-sis')||'sf';
+  const cb=sis==='sf'?BASE_SF:BASE_TR;
+  let base_m2=cb.mat+cb.mo+cb.gg;
+  if(plantas==='2')base_m2*=1.08;
+  if(suelo==='relleno')base_m2+=15;
+  const cEst=m2*base_m2+m2semi*base_m2*0.4;
+  const cubT=pGetVal('p-cub')||'chapa_galv';
+  const cCub=m2*0.88*P_CUB[cubT];
+  const revT=pGetVal('p-rev')||'eifs';
+  const cRev=m2*RATIO_FACH*P_REV[revT];
+  const pisT=pGetVal('p-pisos')||'ceramico';
+  const cPis=m2*P_PISOS[pisT];
+  const cocT=pGetVal('p-cocina')||'media';
+  const cCoc=P_COCINA[cocT];
+  const abeT=pGetVal('p-aber')||'dvh';
+  const cAbe=m2*RATIO_ABER*P_ABER[abeT];
+  const banos=parseInt(document.getElementById('p-banos').value)||2;
+  const saT=document.getElementById('p-sanit').value||'medio';
+  const bdT=pGetVal('p-bdet')||'porcelanato';
+  const cSan=banos*(P_SANIT[saT]+P_BDET[bdT]);
+  const bocas=parseInt(document.getElementById('p-bocas').value)||50;
+  const tabT=document.getElementById('p-tablero').value||'medio';
+  const cElec=bocas*P_BOCA+P_TABLERO[tabT];
+  const calT=pGetVal('p-calef')||'caldera_rad';
+  const cCalef=m2*P_CALEF[calT];
+  const cGG=m2*P_PERM;
+  let cAdi=0,adiItems=[];
+  for(const k of ['pileta','garage','terraza']){
+    if(pExtras[k]){const usd={pileta:13265,garage:8000,terraza:4000}[k];cAdi+=usd;adiItems.push({label:k.charAt(0).toUpperCase()+k.slice(1),usd});}
+  }
+  const sub=cEst+cCub+cRev+cPis+cCoc+cAbe+cSan+cElec+cCalef+cGG+cAdi;
+  const hon=parseFloat(pGetVal('p-hon')||'0.12');
+  const cHon=sub*hon;
+  const total=sub+cHon;
+  const extras=[plantas==='2'&&'2 plantas',...Object.keys(pExtras).filter(k=>pExtras[k])].filter(Boolean);
+  rData={
+    total,
+    rubros:[
+      {label:'Estructura + MO ('+sis.toUpperCase()+')',usd:Math.round(cEst),pct:cEst/total},
+      {label:'Cubierta ('+cubT.replace('_',' ')+')',usd:Math.round(cCub),pct:cCub/total},
+      cRev>0?{label:'Revest. exterior',usd:Math.round(cRev),pct:cRev/total}:null,
+      {label:'Pisos ('+pisT+')',usd:Math.round(cPis),pct:cPis/total},
+      {label:'Cocina y mesadas',usd:Math.round(cCoc),pct:cCoc/total},
+      {label:'Aberturas '+abeT.toUpperCase()+' ('+Math.round(m2*RATIO_ABER)+'m²)',usd:Math.round(cAbe),pct:cAbe/total},
+      {label:'Sanitaria ('+banos+' baños)',usd:Math.round(cSan),pct:cSan/total},
+      {label:'Eléctrica ('+bocas+' bocas)',usd:Math.round(cElec),pct:cElec/total},
+      calT!=='ninguna'?{label:'Calefacción ('+calT.replace('_',' ')+')',usd:Math.round(cCalef),pct:cCalef/total}:null,
+      {label:'Permisos y GG',usd:Math.round(cGG),pct:cGG/total},
+      ...adiItems.map(a=>({...a,pct:a.usd/total})),
+      hon>0?{label:'Honorarios PMD ('+(hon*100)+'%)',usd:Math.round(cHon),pct:cHon/total}:null,
+    ].filter(Boolean),
+    chips:[m2+'m²',sis.toUpperCase(),abeT.toUpperCase(),calT.replace('_',' '),banos+' baños',...extras],
+    nota:'Desglose técnico completo por rubro. Costos verificados en obras reales PMD · mar-2026.',
+    waMsg:`Hola PMD! Cotizador técnico:
+📐 ${m2}m² · ${sis.toUpperCase()} · ${plantas==='2'?'2 plantas':'1 planta'}
+🏗 Pisos: ${pisT} · Aber: ${abeT.toUpperCase()} · Calef: ${calT.replace('_',' ')}
+🛁 ${banos} baños · Cocina: ${cocT}
+💰 USD ${cfmt(Math.round(total*0.9))}–${cfmt(Math.round(total*1.1))}`
+  };
+  mostrarResultado();
+}
+
+// ── RESULTADO COMPARTIDO ──────────────────────────────────────────
+function mostrarResultado(){
+  const {total,chips,nota}=rData;
+  const low=Math.round(total*0.9),high=Math.round(total*1.1);
+  document.getElementById('r-total').textContent=`USD ${cfmt(low)} — ${cfmt(high)}`;
+  document.getElementById('r-ars').textContent=`ARS $${cfmt(low*TC)} — $${cfmt(high*TC)} · TC $${cfmt(TC)}`;
+  document.getElementById('r-note').textContent=nota+' Estimación ±10% · sin terreno.';
+  document.getElementById('r-chips').innerHTML=chips.map(c=>`<span class="r-chip">${c}</span>`).join('');
+  // Reset desglose
+  document.getElementById('dl-locked').style.display='flex';
+  document.getElementById('dl-rows').style.display='none';
+  document.getElementById('lead-form').style.display='none';
+  document.getElementById('wa-section').style.display='none';
+  document.getElementById('dl-badge').textContent='🔒 Requiere datos';
+  // Ocultar todos los panels de pasos
+  ['gp1','gp2','gp3','pp-header','pp1','pp2','pp3','pp4'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.classList.remove('on');
+  });
+  document.getElementById('rp').classList.add('on');
+  setProgress(5,5);
+  scrollToCotiz();
+}
+
+function showLeadForm(){
+  document.getElementById('dl-locked').style.display='none';
+  document.getElementById('lead-form').style.display='block';
+  document.getElementById('lead-form').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function desbloquear(){
+  const nombre=document.getElementById('lf-nombre').value.trim();
+  const tel=document.getElementById('lf-tel').value.trim();
+  if(!nombre){document.getElementById('lf-nombre').classList.add('lerr');document.getElementById('lf-nombre').focus();return;}
+  if(!tel){document.getElementById('lf-tel').classList.add('lerr');document.getElementById('lf-tel').focus();return;}
+  document.getElementById('lf-nombre').classList.remove('lerr');
+  document.getElementById('lf-tel').classList.remove('lerr');
+  document.getElementById('dl-rows').innerHTML=rData.rubros.map(r=>{
+    const pct=Math.round(r.pct*100);
+    const barW=Math.min(Math.round(r.pct*100),100);
+    return `<div class="rr"><div class="rr-label">${r.label}<div class="rr-bar"><div class="rr-fill" style="width:${barW}%"></div></div></div><div class="rr-right"><div class="rr-val">USD ${cfmt(r.usd)}</div><div class="rr-pct">${pct}%</div></div></div>`;
+  }).join('');
+  document.getElementById('dl-rows').style.display='block';
+  document.getElementById('lead-form').style.display='none';
+  document.getElementById('dl-badge').textContent='✓ Desglose completo';
+  document.getElementById('wa-section').style.display='block';
+  const zona=document.getElementById('lf-zona').value||'no especificó';
+  const etapa=document.getElementById('lf-etapa').value||'no especificó';
+  const msg=encodeURIComponent(rData.waMsg+`
+👤 ${nombre} · ${zona}
+📋 ${etapa}
+
+Quiero coordinar una reunión.`);
+  document.getElementById('wa-link').href=`https://wa.me/5491135192030?text=${msg}`;
+}
+</script>
+</body>
+</html>
