@@ -970,14 +970,7 @@ footer{background:var(--ink);padding:3rem 2.5rem;border-top:1px solid rgba(255,2
           <label class="p-rc" onclick="pSelRC(this,'p-calef','split')"><input type="radio" name="p-calef" value="split"><div class="p-rc-check"></div><div class="p-rc-label">Split / AC</div><div class="p-rc-desc">Frío-calor, sin gas</div><div class="p-rc-price">USD 8/m²</div></label>
         </div>
       </div>
-      <div class="p-sec">
-        <div class="p-sec-title">Honorarios PMD</div>
-        <div class="p-rg">
-          <label class="p-rc psel" onclick="pSelRC(this,'p-hon','0.12')"><input type="radio" name="p-hon" value="0.12" checked><div class="p-rc-check"></div><div class="p-rc-label">Dirección de obra</div><div class="p-rc-desc">PMD dirige la ejecución</div><div class="p-rc-price">12% sobre costo</div></label>
-          <label class="p-rc" onclick="pSelRC(this,'p-hon','0.18')"><input type="radio" name="p-hon" value="0.18"><div class="p-rc-check"></div><div class="p-rc-label">Proyecto + dirección</div><div class="p-rc-desc">Diseño + ejecución</div><div class="p-rc-price">18% sobre costo</div></label>
-          <label class="p-rc" onclick="pSelRC(this,'p-hon','0')"><input type="radio" name="p-hon" value="0"><div class="p-rc-check"></div><div class="p-rc-label">Sin honorarios</div><div class="p-rc-desc">Solo construcción</div><div class="p-rc-price">USD 0</div></label>
-        </div>
-      </div>
+      
       <div style="display:flex;justify-content:space-between;margin-top:.5rem">
         <button class="btn-c btn-c-ghost" style="width:auto;padding:0 18px" onclick="pGo(3)">← Atrás</button>
         <button class="btn-c btn-c-main" style="width:auto;padding:0 24px" onclick="pCalcular()">Ver mi presupuesto →</button>
@@ -991,7 +984,7 @@ footer{background:var(--ink);padding:3rem 2.5rem;border-top:1px solid rgba(255,2
         <div class="r-label">Inversión estimada — sin terreno</div>
         <div class="r-total-num" id="r-total">–</div>
         <div class="r-ars" id="r-ars">–</div>
-        <div class="r-note" id="r-note">Estimación ±10% · Costos verificados obras PMD · mar-2026 · TC $1.425</div>
+        <div class="r-note" id="r-note">Estimación ±10% · Honorarios incluidos · Costos verificados PMD · mar-2026 · TC $1.425</div>
       </div>
       <div class="desglose-wrap">
         <div class="dl-header"><span class="dl-title">Desglose por rubro</span><span class="dl-badge" id="dl-badge">🔒 Requiere datos</span></div>
@@ -1316,9 +1309,7 @@ function pCalcular(){
     if(pExtras[k]){const usd={pileta:13265,garage:8000,terraza:4000}[k];cAdi+=usd;adiItems.push({label:k.charAt(0).toUpperCase()+k.slice(1),usd});}
   }
   const sub=cEst+cCub+cRev+cPis+cCoc+cAbe+cSan+cElec+cCalef+cGG+cAdi;
-  const hon=parseFloat(pGetVal('p-hon')||'0.12');
-  const cHon=sub*hon;
-  const total=sub+cHon;
+  const total=sub;
   const extras=[plantas==='2'&&'2 plantas',...Object.keys(pExtras).filter(k=>pExtras[k])].filter(Boolean);
   rData={
     total,
@@ -1334,10 +1325,9 @@ function pCalcular(){
       calT!=='ninguna'?{label:'Calefacción ('+calT.replace('_',' ')+')',usd:Math.round(cCalef),pct:cCalef/total}:null,
       {label:'Permisos y GG',usd:Math.round(cGG),pct:cGG/total},
       ...adiItems.map(a=>({...a,pct:a.usd/total})),
-      hon>0?{label:'Honorarios PMD ('+(hon*100)+'%)',usd:Math.round(cHon),pct:cHon/total}:null,
     ].filter(Boolean),
     chips:[m2+'m²',sis.toUpperCase(),abeT.toUpperCase(),calT.replace('_',' '),banos+' baños',...extras],
-    nota:'Desglose técnico completo por rubro. Costos verificados en obras reales PMD · mar-2026.',
+    nota:'Costos verificados en obras reales PMD · Honorarios incluidos · mar-2026.',
     waMsg:`Hola PMD! Cotizador técnico:
 📐 ${m2}m² · ${sis.toUpperCase()} · ${plantas==='2'?'2 plantas':'1 planta'}
 🏗 Pisos: ${pisT} · Aber: ${abeT.toUpperCase()} · Calef: ${calT.replace('_',' ')}
